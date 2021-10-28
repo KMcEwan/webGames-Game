@@ -22,6 +22,12 @@ var config =
         preload,
         create,
         update,
+
+        extend:
+        {
+            createPlayer: createPlayer
+            //initPlayer2Controls: initPlayer2Controls
+        }
     }
    
 };
@@ -32,7 +38,7 @@ var game = new Phaser.Game(config);
 let player1;
 let player2;
 let inputKey;
-let wKey, aKey, sKey, dKey;
+let aKey, dKey;
 
 
 function preload ()                                              // loads all assets
@@ -47,24 +53,15 @@ function create ()
 {
    this.add.image(400, 300, 'background');                                                                  // Load background into scene, 
    inputKey = this.input.keyboard.createCursorKeys();          // create keyboard controls
-   player1 = this.physics.add.sprite(200,500, 'player1')
-   player2 = this.physics.add.sprite(600,500, 'player2')
+//    player1 = this.physics.add.sprite(200,500, 'player1')
+//    player2 = this.physics.add.sprite(600,500, 'player2')
    //initPlayer2Controls();
+   aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
+   dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+   player1 = this.createPlayer(200, 500, 'player1');
+   player2 = this.createPlayer(600, 500, 'player2');
 
-//    let playerOne = new Phaser.Class
-//    (
-//     {
-//         initialize:
-
-//         function playerOne(scene, x, y)
-//         { 
-//             this.setTexture('player1');
-//             this.setPosition(x * 16, y * 16);
-//             this.setOrigin(0);
-//         }
-//     }
-//    )
-}
+}   
 
 function update()
 {
@@ -74,24 +71,24 @@ function update()
 function checkMovement()
 {
     checkPlayer1Movement();
-   // checkPlayer2Movement();
+    checkPlayer2Movement();
 }
 
 // function initPlayer2Controls()
 // {   
-//     aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
-//     dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+//   aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
+//   dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 // }
 
 function checkPlayer1Movement()
 {
     player1.setVelocityY(0);
 
-    if(inputKey.left.isDown)
+    if(aKey.isDown)
     {
         player1.setVelocityX(-300);
     }
-    else if(inputKey.right.isDown)
+    else if(dKey.isDown)
     {
         player1.body.setVelocityX(300);
     }
@@ -101,20 +98,26 @@ function checkPlayer1Movement()
     }
 }
 
-// function checkPlayer2Movement()
-// {
-//     player2.setVelocityY(0);
+function checkPlayer2Movement()
+{
+   player2.setVelocityY(0);
 
-//     if(inputKey.aKey.isDown)
-//     {
-//         player2.setVelocityX(-300);
-//     }
-//     else if(inputKey.dKey.isDown)
-//     {
-//         player2.body.setVelocityX(300);
-//     }
-//     else
-//     {
-//         player2.body.setVelocityX(0);
-//     }
-// }
+    if(inputKey.left.isDown)
+    {
+        player2.setVelocityX(-300);
+    }
+    else if(inputKey.right.isDown)
+    {
+        player2.body.setVelocityX(300);
+    }
+    else
+    {
+        player2.body.setVelocityX(0);
+    }
+}
+ function createPlayer(x, y, key)
+ {
+    const player = this.physics.add.sprite(x, y, key);
+    return player;
+ }
+ 
