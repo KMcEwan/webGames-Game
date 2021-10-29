@@ -27,7 +27,8 @@ var config =
         extend:
         {
             createPlayer: createPlayer,
-            createBullet: createBullet
+            createEnemyBullets: createEnemyBullets,
+            //createBullet: createBullet
             //initPlayer2Controls: initPlayer2Controls
         }
     }
@@ -41,14 +42,18 @@ let player1;
 let player2;
 let inputKey;
 let aKey, dKey, spaceShoot, zeroShoot;
+let testKey;
 
-
+// Player bullets
 var bullets;
 var ship;
 var speed;
 var stats;
 var cursors;
 var lastFired = 0;
+
+// Enemy bullets
+let enemyBullets;
 
 
 function preload ()                                                                                         // loads all assets
@@ -58,23 +63,34 @@ function preload ()                                                             
     this.load.image('player2', 'assets/bluePlayer.png');
     this.load.image('background', 'assets/background.png');
     this.load.image('laser', 'assets/laser.png');
+    this.load.image('enemyBullets', 'assets/enemy.png');
 }
 
 function create ()
 {
    this.add.image(400, 300, 'background');                                                                  // Load background into scene, 
    inputKey = this.input.keyboard.createCursorKeys();                                                       // create keyboard controls
-   //initPlayer2Controls();
-   aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
-   dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+   initPlayer2Controls.call(this);
+
 
    spaceShoot = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);    
    zeroShoot = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+   testKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
    
    player1 = this.createPlayer(200, 500, 'player1');
    player2 = this.createPlayer(600, 500, 'player2');
 
 
+    enemyBullets = [];
+    for(let i = 0; i < 10; i++)
+    {
+        enemyBullets[i] = enemyBullets.push(this.createEnemyBullets(game, 'enemyBullets'));
+    }
+
+    //enemy = this.createEnemyBullets(game, 'enemyBullets');
+
+
+    // BULLET 
    var Bullet = new Phaser.Class({
 
     Extends: Phaser.GameObjects.Image,
@@ -115,12 +131,19 @@ bullets = this.add.group({
     runChildUpdate: true
 });
 }  
-
+// END OF BULLET
 
 
 function update()
 {
     checkMovement();    
+        //test
+    if(testKey.isDown)
+    {
+        playerDamage.call(this);
+        console.log(player.health);
+    }
+    // End of testing
 }
 
 function checkMovement()
@@ -129,14 +152,16 @@ function checkMovement()
     checkPlayer2Movement();
 }
 
-// function initPlayer2Controls()
-// {   
-//   aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
-//   dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-// }
+function initPlayer2Controls()
+{   
+  aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
+  dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+}
 
 function checkPlayer1Movement()
 {
+
+
     player1.setVelocityY(0);
 
     if(aKey.isDown)
@@ -189,19 +214,34 @@ function checkPlayer2Movement()
  function createPlayer(x, y, key)
  {
     const player = this.physics.add.sprite(x, y, key);
+    this.health = 100;
     return player;
  }
 
- function createBullet(key, path, player)
- {
-    bullet = this.load.image(key, path);
-    setPosition(player.x, player.y);
-    setActive(true);
-    setVisible(true);
- }
+createPlayer.prototype.playerDamage = function()        // prototype causes inheritance from createPlayer
+{
+    this.health -= 10;
+}
+
+//  function createBullet(key, player)
+//  {
+//     bullet = this.load.image(key);
+//     setPosition(player.x, player.y);
+//     setActive(true);
+//     setVisible(true);
+//  }
 
  function fire()
  {
 
  }
  
+function createEnemyBullets(game, key)
+{
+    let x = Phaser.Math.Between(0, game.config.width);
+    let y = 0.5;
+
+    let enemyBullet = this.physics.add.sprite(x,y,key);
+    this.alive = true;
+    return enemyBullet;
+}
