@@ -79,16 +79,19 @@ function create ()
    
    player1 = this.createPlayer(200, 500, 'player1');
    player2 = this.createPlayer(600, 500, 'player2');
+   console.log("player health" + player1.health);
 
+    // enemyBullets = [];
+    // for(let i = 0; i < 10; i++)
+    // {
+    //     enemyBullets[i] = enemyBullets.push(this.createEnemyBullets(game, 'enemyBullets'));
+    // }
 
-    enemyBullets = [];
-    for(let i = 0; i < 10; i++)
-    {
-        enemyBullets[i] = enemyBullets.push(this.createEnemyBullets(game, 'enemyBullets'));
-    }
+    enemyBullets = this.createEnemyBullets(game, 'enemyBullets');
 
     //enemy = this.createEnemyBullets(game, 'enemyBullets');
 
+    
 
     // BULLET 
    var Bullet = new Phaser.Class({
@@ -101,12 +104,12 @@ function create ()
     {
         Phaser.GameObjects.Image.call(this, scene, 0, 0, 'laser');
 
-        this.speed = Phaser.Math.GetSpeed(400, 1);
+        this.speed = Phaser.Math.GetSpeed(400, 1);              // speed of lasers
     },
 
-    fire: function (x, y)
+    fire: function (x, y)   
     {
-        this.setPosition(x, y - 50);
+        this.setPosition(x, y - 10);                            // give bullet position, x and y are set to player pos within controls
 
         this.setActive(true);
         this.setVisible(true);
@@ -136,14 +139,9 @@ bullets = this.add.group({
 
 function update()
 {
-    checkMovement();    
-        //test
-    if(testKey.isDown)
-    {
-        playerDamage.call(this);
-        console.log(player.health);
-    }
-    // End of testing
+    checkMovement();  
+      
+    enemyBullets.setVelocityY(200);
 }
 
 function checkMovement()
@@ -160,7 +158,13 @@ function initPlayer2Controls()
 
 function checkPlayer1Movement()
 {
-
+    //test
+    if(testKey.isDown)
+    {
+        player1.health -= 10;
+        console.log(player1.health);
+    }
+    // End of testing
 
     player1.setVelocityY(0);
 
@@ -214,7 +218,7 @@ function checkPlayer2Movement()
  function createPlayer(x, y, key)
  {
     const player = this.physics.add.sprite(x, y, key);
-    this.health = 100;
+    player.health = 100;
     return player;
  }
 
