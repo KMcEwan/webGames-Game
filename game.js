@@ -57,6 +57,7 @@ var lastFired = 0;
 // Enemy bullets
 let enemyBullets;
 let enemyBulletCount = 0;
+let enemy;
 
 function preload ()                                                                                         // loads all assets
 {
@@ -81,7 +82,14 @@ function create ()
    
    player1 = this.createPlayer(200, 500, 'player1');
    player2 = this.createPlayer(600, 500, 'player2');
+
+   
+   enemy = this.createEnemyBullets(game, 'enemyBullets');
+   enemy.setVelocityY(300);
+
+
    console.log("player health" + player1.health);
+   this.physics.add.collider(player1, enemy);
 
     // enemyBullets = [];
     // for(let i = 0; i < 10; i++)
@@ -142,25 +150,25 @@ bullets = this.add.group({
 function update()
 {
     checkMovement();  
-    if (enemyBulletCount < 20)  
-    {
-        enemyBullets = [];
-        enemyBullets = this.createEnemyBullets(game, 'enemyBullets');
-        enemyBulletCount++;
-        enemyBullets.setVelocityY(Phaser.Math.Between(60, 150));
-    }
+//     if (enemyBulletCount < 20)  
+//     {
+//         //enemyBullets = [];
+//         enemyBullets = this.createEnemyBullets(game, 'enemyBullets');
+//         enemyBulletCount++;
+//         enemyBullets.setVelocityY(Phaser.Math.Between(60, 150));
+//     }
    
 
-   // console.log("position" + enemyBullets.y);
-    for(let i = 0; i < enemyBullets.maxSize; i++)
-    {
-        if(enemyBullets.y > game.config.height)
-    {
-        enemyBullets.destroy();
-        enemyBulletCount--;
-        console.log("count" + enemyBulletCount);
-    }
-    }
+//    // console.log("position" + enemyBullets.y);
+//     for(let i = 0; i < enemyBullets.maxSize; i++)
+//     {
+//         if(enemyBullets.y > game.config.height)
+//     {
+//         enemyBullets.destroy();
+//         enemyBulletCount--;
+//         console.log("count" + enemyBulletCount);
+//     }
+//     }
     
 }
 
@@ -188,11 +196,11 @@ function checkPlayer1Movement()
 
     player1.setVelocityY(0);
 
-    if(aKey.isDown)
+    if(aKey.isDown&& player1.x >= 15)
     {
         player1.setVelocityX(-300);
     }
-    else if(dKey.isDown)
+    else if(dKey.isDown&& player1.x <= 785)
     {
         player1.body.setVelocityX(300);   
     }
@@ -210,11 +218,12 @@ function checkPlayer2Movement()
 {
    player2.setVelocityY(0);
 
-    if(inputKey.left.isDown)
+    if(inputKey.left.isDown && player2.x >= 15)
     {
+        console.log(player2.x);
         player2.setVelocityX(-300);
     }
-    else if(inputKey.right.isDown)
+    else if(inputKey.right.isDown && player2.x <= 785)
     {      
         player2.body.setVelocityX(300);
     }
