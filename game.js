@@ -52,9 +52,11 @@ var stats;
 var cursors;
 var lastFired = 0;
 
+
+
 // Enemy bullets
 let enemyBullets;
-
+let enemyBulletCount = 0;
 
 function preload ()                                                                                         // loads all assets
 {
@@ -87,7 +89,7 @@ function create ()
     //     enemyBullets[i] = enemyBullets.push(this.createEnemyBullets(game, 'enemyBullets'));
     // }
 
-    enemyBullets = this.createEnemyBullets(game, 'enemyBullets');
+    //enemyBullets = this.createEnemyBullets(game, 'enemyBullets');                                             // Spawn first enemy bullet
 
     //enemy = this.createEnemyBullets(game, 'enemyBullets');
 
@@ -140,8 +142,26 @@ bullets = this.add.group({
 function update()
 {
     checkMovement();  
-      
-    enemyBullets.setVelocityY(200);
+    if (enemyBulletCount < 20)  
+    {
+        enemyBullets = [];
+        enemyBullets = this.createEnemyBullets(game, 'enemyBullets');
+        enemyBulletCount++;
+        enemyBullets.setVelocityY(Phaser.Math.Between(60, 150));
+    }
+   
+
+   // console.log("position" + enemyBullets.y);
+    for(let i = 0; i < enemyBullets.maxSize; i++)
+    {
+        if(enemyBullets.y > game.config.height)
+    {
+        enemyBullets.destroy();
+        enemyBulletCount--;
+        console.log("count" + enemyBulletCount);
+    }
+    }
+    
 }
 
 function checkMovement()
