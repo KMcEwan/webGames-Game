@@ -15,6 +15,7 @@ var config =
         default: 'arcade',
         arcade:
         {
+            debug: true,
             gravity: { y: 0 }
         }
     },
@@ -85,11 +86,13 @@ function create ()
 
    
    enemy = this.createEnemyBullets(game, 'enemyBullets');
-   enemy.setVelocityY(300);
+   
+   enemy.setVelocityY(10);
 
 
    console.log("player health" + player1.health);
    this.physics.add.collider(player1, enemy);
+//    this.physics.add.collider(bullets, enemy);
 
     // enemyBullets = [];
     // for(let i = 0; i < 10; i++)
@@ -134,17 +137,28 @@ function create ()
             this.setActive(false);
             this.setVisible(false);
         }
-    }
+    },
+    });
 
-});
-
-bullets = this.add.group({
+    bullets = this.physics.add.group({
     classType: Bullet,
     maxSize: 10,
     runChildUpdate: true
-});
+    })
+   
+
+this.physics.add.collider(bullets, enemy, testFunc());
+
+
+
 }  
 // END OF BULLET
+
+function testFunc()
+{
+    console.log("collision");
+    enemy.destroy();
+}
 
 
 function update()
@@ -246,8 +260,8 @@ function checkPlayer2Movement()
 
  function createPlayer(x, y, key)
  {
-    const player = this.physics.add.sprite(x, y, key);
-    player.health = 100;
+    let player = this.physics.add.sprite(x, y, key);
+    player.health = 100;  
     return player;
  }
 
