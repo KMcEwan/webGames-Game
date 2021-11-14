@@ -1,16 +1,18 @@
 
 var config = 
 {
-    type: Phaser.AUTO,       
+    type: Phaser.AUTO,      
+    width: 600,
+    height: 800, 
     scale:
     {   parent: 'game',
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        width: 800,
-        height: 1080
+        // width: 600,
+        // height: 800
     },
 
-    scene: [loader, mainMenu],
+    scene: [loader, mainMenu, controls, mainGame],
 
     physics:
     {
@@ -24,7 +26,7 @@ var config =
     
     
    
-};
-
-console.log("Set up");
-var game = new Phaser.Game(config);
+},
+player1,
+player2,
+game = new Phaser.Game(config);

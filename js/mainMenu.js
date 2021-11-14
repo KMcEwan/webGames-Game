@@ -16,11 +16,11 @@ class mainMenu extends Phaser.Scene
         this.add.image(400, 300, 'background');  
 
         /* START BUTTON CREATION */
-        const startButton = this.add.image(100, 100, 'player1');
+        const startButton = this.add.image(config.width / 2, config.height / 2 - 100, 'startButton');
         startButton.setInteractive();
 
         /* CONTROL BUTTON CREATION */
-        const controlButton = this.add.image(200, 200, 'player1');
+        const controlButton = this.add.image(config.width / 2, config.height / 2 + 100, 'controlButton');
         controlButton.setInteractive();
 
         /* TITLE MUSIC CREATION */

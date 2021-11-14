@@ -1,5 +1,6 @@
 class mainGame extends Phaser.Scene
 {
+    
     constructor ()
     {
         super({key: "gameKey"});
@@ -13,12 +14,33 @@ class mainGame extends Phaser.Scene
     create()
     {
         this.add.image(400, 300, 'background');  
-        console.log("game script");        
+        player1 = new player
+        (
+            {
+                scene: this,
+                key: 'player1',
+                xPos: 100,
+                yPos: 100
+            }
+        );
+
+        player2 = new player
+        (
+            {
+                scene: this,
+                key: 'player2',
+                xPos: 300,
+                yPos: 200
+            }
+        );
+
+        console.log(player1.health);
     };
 
     update()
     {
-
+        console.log("update");
+        player1.update();
     };
 }
 
