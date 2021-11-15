@@ -13,40 +13,36 @@ class mainGame extends Phaser.Scene
 
     create()
     {
-        this.player1Controls = this.input.keyboard.addKeys
-        ({
-            'left' : Phaser.Input.Keyboard.KeyCodes.A,
-            'right' : Phaser.Input.Keyboard.KeyCodes.D
-        })
+        // this.playerInput = [];
+        // this.playerInput [0] = this.input.keyboard.addKeys({
+        //   'left': Phaser.Input.Keyboard.KeyCodes.A,
+        //   'right': Phaser.Input.Keyboard.KeyCodes.D,
+        // });
+
+        this.playerInput ;
+        this.playerInput = this.input.keyboard.addKeys({
+          'left': Phaser.Input.Keyboard.KeyCodes.A,
+          'right': Phaser.Input.Keyboard.KeyCodes.D,
+        });
+      
 
         this.add.image(400, 300, 'background');  
         player1 = new player
         (
-            {
-                scene: this,
-                key: 'player1',
-                xPos: 100,
-                yPos: 100,
-                playerControls : this.player1Controls
-            }
-        );
-
-        player2 = new player
-        (
-            {
-                scene: this,
-                key: 'player2',
-                xPos: 300,
-                yPos: 200
-            }
+            
+                 this,              
+                100,
+                100,
+                'player1',
+                0
+           
         );
 
         console.log(player1.health);
     };
 
     update()
-    {
-        console.log("update");
+    {        
         player1.update();
     };
 }

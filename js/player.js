@@ -1,46 +1,51 @@
-class player extends Phaser.GameObjects.Sprite
+class player extends Phaser.Physics.Arcade.Sprite
 {
-    constructor (config)
-    {        
-        super(config.scene,config.xPos, config.yPos, config.key, config.playerControls);
-
+    static aKey;
+    cursorKeys;
+    constructor(scene, xPos, yPos,key, playerInput)
+    {
+        super(scene, xPos, yPos, key);
+       // if (playerInput == null) playerInput = 0;
+        this.cursorKeys = scene.playerInput;
         this.health = 100;
         this.lives = 3; 
         this.isAlive = true;
-        console.log("Player class")
-        config.scene.add.existing(this);
-        this.cursorKeys = config.scene.playerControls;
-    }  
+        scene.add.existing(this);
+        scene.physics.world.enableBody(this);
+        aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);  
+    }
 
     preload()
     {
 
-    };
+    }
 
     create()
     {
+        console.log("create");
         
-    };
+    }
 
     update()
     {
-        console.log("Update");
-        this.movePlayerTwo();        
-    };
+        this.movePlayers();
+        //console.log("player update");
+    }
 
-    movePlayerTwo()
+    movePlayers()
     {
-        console.log("Player 2 movement");
-        if(this.cursorKeys.left.isDown)
+        this.setVelocityX(0);
+        if(aKey.isDown)
         {
-            //this.setVelocity(-10);
-            console.log("move left");
+            console.log("player move");
+            this.setVelocityX(-100);
         }
-        // else 
-        // if('right')
-        // {
-        //     //this.setVelocity(10);
-        //     console.log("move right");
-        // }
-    };
+        else
+        if(this.cursorKeys.right.isDown)
+        {
+            console.log("player move");
+            this.setVelocityX(100);
+        }
+    }
+
 }
