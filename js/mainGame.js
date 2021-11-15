@@ -13,38 +13,74 @@ class mainGame extends Phaser.Scene
 
     create()
     {
-        // this.playerInput = [];
-        // this.playerInput [0] = this.input.keyboard.addKeys({
-        //   'left': Phaser.Input.Keyboard.KeyCodes.A,
-        //   'right': Phaser.Input.Keyboard.KeyCodes.D,
-        // });
-
-        this.playerInput ;
-        this.playerInput = this.input.keyboard.addKeys({
-          'left': Phaser.Input.Keyboard.KeyCodes.A,
-          'right': Phaser.Input.Keyboard.KeyCodes.D,
-        });
-      
-
         this.add.image(400, 300, 'background');  
-        player1 = new player
-        (
-            
-                 this,              
-                100,
-                100,
-                'player1',
-                0
-           
-        );
-
-        console.log(player1.health);
+        player1 = new player (this, 100, 100,'player1', 0);
+        player2 = new player (this, 200, 100,'player2', 1);      
+        
     };
 
     update()
-    {        
-        player1.update();
-    };
+    {
+
+        if(!player1.player1Movement.left.isDown || !player1.player1Movement.right.isDown || !player2.player2Movement.left2.isDown || !player2.player2Movement.right2.isDown) 
+        {
+            player1.setVelocityX(0);
+            player2.setVelocityX(0);
+        }
+
+       
+        this.fireLaser();
+        this.movePlayers();
+    }
+
+    movePlayers()
+    {
+        if(player1.player1Movement.left.isDown || player1.player1Movement.right.isDown || player2.player2Movement.left2.isDown || player2.player2Movement.right2.isDown)
+        {
+            this.movePlayer1();
+            this.movePlayer2();
+            //console.log("movePlayers");
+            player1.score += 10;
+            console.log(player1.score);
+        }       
+    }
+
+    fireLaser()
+    {
+        laser = new laser(this, 300, 300, 'laser');
+    }
+    movePlayer1()
+    {
+        if(player1.player1Movement.left.isDown)
+        {
+            console.log("player move");
+            player1.setVelocityX(-100);
+        }
+        else
+        if(player1.player1Movement.right.isDown)
+        {
+            console.log("player move");
+            player1.setVelocityX(100);
+        }
+    }
+
+    movePlayer2()
+    {
+        console.log("PLAYER 2");
+        if(player2.player2Movement.left2.isDown)
+        {
+            console.log("player move");
+            player2.setVelocityX(-100);
+        }
+        else
+        if(player2.player2Movement.right2.isDown)
+        {
+            console.log("player move");
+            player2.setVelocityX(100);
+        }
+    }
+
+
 }
 
 
