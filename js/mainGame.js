@@ -13,6 +13,12 @@ class mainGame extends Phaser.Scene
 
     create()
     {
+        this.player1Controls = this.input.keyboard.addKeys
+        ({
+            'left' : Phaser.Input.Keyboard.KeyCodes.A,
+            'right' : Phaser.Input.Keyboard.KeyCodes.D
+        })
+
         this.add.image(400, 300, 'background');  
         player1 = new player
         (
@@ -20,7 +26,8 @@ class mainGame extends Phaser.Scene
                 scene: this,
                 key: 'player1',
                 xPos: 100,
-                yPos: 100
+                yPos: 100,
+                playerControls : this.player1Controls
             }
         );
 
