@@ -118,15 +118,7 @@ class mainGame extends Phaser.Scene
     };
 
     update()
-    {
-        // if(!this.aKey.isDown || !this.dKey.isDown || !this.inputKey.left.isDown || !this.inputKey.right.isDown)
-        // {
-        //     player1.setVelocityX(0);
-        //     player2.setVelocityX(0);
-        // }
-
-
-
+    { 
         if(this.aKey.isDown || this.dKey.isDown || this.inputKey.left.isDown || this.inputKey.right.isDown)
         {
             this.movePlayers();
@@ -199,6 +191,12 @@ class mainGame extends Phaser.Scene
         this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.fireSpcace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         return player;
+    }
+
+    createLaser(x, y)
+    {
+        laser = this.physics.add.sprite(x, y);
+        
     }
 }
 
