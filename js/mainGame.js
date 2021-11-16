@@ -1,9 +1,12 @@
+
+/*WORKING BEFORE CHANGING CODE TO ONE SCENE 
 class mainGame extends Phaser.Scene
 {
     
     constructor ()
     {
         super({key: "gameKey"});
+        var laser;
     }
 
     preload()
@@ -82,6 +85,135 @@ class mainGame extends Phaser.Scene
 
 
 }
+END WORKING BEFORE CHANGING CODE TO ONE SCENE */
+
+
+
+class mainGame extends Phaser.Scene
+{
+
+    constructor ()
+    {
+        super({key: "gameKey"});
+        var laser;
+        let aKey;
+        let dKey;
+        let fireSpcace;
+        let inputKey;
+    }
+
+    preload()
+    {
+
+    };
+
+    create()
+    {
+        this.inputKey = this.input.keyboard.createCursorKeys(); 
+        this.add.image(400, 300, 'background');  
+        player1 = this.createPlayer(200, 500, 'player1', player1);
+        player2 = this.createPlayer(600, 500, 'player2', player2);
+         
+        
+    };
+
+    update()
+    {
+        // if(!this.aKey.isDown || !this.dKey.isDown || !this.inputKey.left.isDown || !this.inputKey.right.isDown)
+        // {
+        //     player1.setVelocityX(0);
+        //     player2.setVelocityX(0);
+        // }
+
+
+
+        if(this.aKey.isDown || this.dKey.isDown || this.inputKey.left.isDown || this.inputKey.right.isDown)
+        {
+            this.movePlayers();
+        }
+        else
+        {
+            player1.setVelocityX(0);
+            player2.setVelocityX(0);
+        }
+    }
+
+    movePlayers()
+    {
+        if(this.aKey.isDown || this.dKey.isDown || this.inputKey.left.isDown || this.inputKey.right.isDown)
+        {
+            this.movePlayer1();
+            this.movePlayer2();
+            this.score += 10;
+            console.log(player1.score);
+            console.log(player2.score);
+        }       
+    }
+
+    movePlayer1()
+    {
+        if(this.aKey.isDown)
+        {
+            console.log("player move");
+            player1.setVelocityX(-100);
+            player1.score += 10;
+        }
+        else
+        if(this.dKey.isDown)
+        {
+            console.log("player move");
+            player2.score += 10;
+            player1.setVelocityX(100);
+        }
+    }
+
+    movePlayer2()
+    {
+        console.log("PLAYER 2");
+        if(this.inputKey.left.isDown)
+        {
+            player2.setVelocityX(-100);
+        }
+        else
+        if(this.inputKey.right.isDown)
+        {
+            player2.setVelocityX(100);
+        }
+    }
+
+        // fireLaser()
+    // {
+    //     laser = new laser(this, 300, 300, 'laser');
+    // }
+
+    createPlayer(x, y, key, player)
+    {
+        player = this.physics.add.sprite(x, y, key);
+        player.health = 100;
+        player.lives = 3; 
+        player.isAlive = true;
+        player.score = 0; 
+        player.setCollideWorldBounds(true); 
+
+        this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
+        this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.fireSpcace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        return player;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
