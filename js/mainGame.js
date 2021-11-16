@@ -95,18 +95,30 @@ class mainGame extends Phaser.Scene
     constructor ()
     {
         super({key: "gameKey"});
-        var laser;
+        /* KEY INPUTS */
         let aKey;
         let dKey;
         let fireSpcace;
         let inputKey;
-        let enenmy;
+
+        var laser;
+        let maxScore; 
+        
+        /*ENEMY */
+        let enemy;
+        let enemies;
+        let enemyCount;
+        let enemiesInScene;
+
+        /* ENEMY SPAWN */
+        let firstWave;
+        let secondWave;
+        let thirdWave;
+        let ForthWave;
+
+        /* TESTING */
+        var bullets;
     }
-
-    preload()
-    {
-
-    };
 
     create()
     {
@@ -114,13 +126,22 @@ class mainGame extends Phaser.Scene
         this.add.image(400, 300, 'background');  
         player1 = this.createPlayer(200, 500, 'player1', player1);
         player2 = this.createPlayer(600, 500, 'player2', player2);
-
-         
-        
+        this.enemyCount = 0;
+        this.maxScore = 0;
+        this.firstWave = 20;
+        this.secondWave = 30;
+        this.thirdWave = 30;
+        this.ForthWave = 40;
+        this.enemiesInScene = 0
+    
     };
+
 
     update()
     { 
+        this.physics.add.collider(player2, this.laser,  () => console.log('collider'))
+
+
         if(this.aKey.isDown || this.dKey.isDown || this.inputKey.left.isDown || this.inputKey.right.isDown)
         {
             this.movePlayers();
@@ -133,11 +154,51 @@ class mainGame extends Phaser.Scene
         if(this.fireSpcace.isDown)
         {
             this.fireLaser(player1.x, player1.y, 'laser');
+            player1.score += 100;
+
         }
         if(this.fire0.isDown)
         {
             this.fireLaser(player2.x, player2.y, 'laser2');
         }
+        //console.log(player1.score);
+        this.checkPlayersScore();
+
+  
+    }
+
+    checkPlayersScore()
+    {
+            
+        if (player1.score > player2.score)
+        {
+            this.maxScore = player1.score;
+        }
+        else
+        {
+            this.maxScore = player2.score;
+        }
+
+        if(this.maxScore < 300)
+        {
+            this.enemiesInScene = this.firstWave - this.enemyCount;
+            // for(let i = 0; i < this.enemiesInScene; i++)
+            // {
+            //     this.enemy = this.createEnemies('enemy');        
+            // }
+           
+        }
+        else
+        if(this.maxScore < 600)
+        {
+            console.log("Second set of enemies");
+        }
+        else
+        if(this.maxScore < 900)
+        {
+            console.log("Second set of enemies");
+        }
+
     }
 
     movePlayers()
@@ -209,19 +270,87 @@ class mainGame extends Phaser.Scene
         this.laser = this.physics.add.sprite(xPos,yPos - 30, key);
         this.laser.setVelocityY(-100);
         //this.laser.setCollideWorldBounds(true);
-        console.log("create laser");
+        //console.log("create laser");
         return this.laser;
     }
 
-    createEnemies()
+    createEnemies(key)
     {
+        this.enemies = physics.add.group();
+
+        var ranXValue = Phaser.Math.Between(300, 1);
+        var ranVelocity = Phaser.Math.Between(500, 100);
+        this.enemy = this.physics.add.sprite(ranXValue, 100, key)
+        this.enemy.setVelocityY(ranVelocity);
+        this.enemyCount++;
+        console.log("Enemy count " + this.enemyCount);
+
         
-        this.enenmy = this.physics.ass.sprite()
     }
+
+   
+
+    // Bullet = new Phaser.Class({
+
+    //     Extends: Phaser.GameObjects.Image,
+
+    //     initialize:
+
+    //     function Bullet (scene)
+    //     {
+    //         Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
+
+    //         this.speed = Phaser.Math.GetSpeed(400, 1);
+    //     },
+
+    //     fire: function (x, y)
+    //     {
+    //         this.setPosition(x, y - 50);
+
+    //         this.setActive(true);
+    //         this.setVisible(true);
+    //     },
+
+    //     update: function (time, delta)
+    //     {
+    //         this.y -= this.speed * delta;
+
+    //         if (this.y < -50)
+    //         {
+    //             this.setActive(false);
+    //             this.setVisible(false);
+    //         }
+    //     }
+
+    // });
+
+    // bullets = this.add.group({
+    //     classType: Bullet,
+    //     maxSize: 10,
+    //     runChildUpdate: true
+    // });
 }
 
 
+// class enemies extends Phaser.Physics.Arcade.Sprite
+// {
+//     enemy()
+//     {
+//         var ranXValue = Phaser.Math.Between(300, 1);
+//         var ranVelocity = Phaser.Math.Between(500, 100);
+//         this.enemy = this.physics.add.sprite(ranXValue, 100, key)
+//         this.enemy.setVelocityY(ranVelocity);
+//         this.enemyCount++;
+//         console.log("Enemy count " + this.enemyCount);
+//     }
 
+//     Enemies = this.add.group({
+//         classType: enemies,
+//         maxSize: 10,
+//         //runChildUpdate: true
+//     });
+
+// }
 
 
 
