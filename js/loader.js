@@ -11,8 +11,8 @@ class loader extends Phaser.Scene
         this.load.image('player2', '../assets/bluePlayer.png');
         this.load.image('background', '../assets/background.png');
         this.load.image('laser', '../assets/laser.png');
-        this.load.image('enemyBullets', '../assets/enemy.png');
-        this.load.image('enemyBullets', '../assets/enemy.png');
+        this.load.image('laser2', '../assets/laser2.png');
+        this.load.image('enemy', '../assets/enemy.png');
 
 
         /* AUDIO - MUSIC */

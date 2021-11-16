@@ -100,6 +100,7 @@ class mainGame extends Phaser.Scene
         let dKey;
         let fireSpcace;
         let inputKey;
+        let enenmy;
     }
 
     preload()
@@ -113,6 +114,7 @@ class mainGame extends Phaser.Scene
         this.add.image(400, 300, 'background');  
         player1 = this.createPlayer(200, 500, 'player1', player1);
         player2 = this.createPlayer(600, 500, 'player2', player2);
+
          
         
     };
@@ -128,6 +130,14 @@ class mainGame extends Phaser.Scene
             player1.setVelocityX(0);
             player2.setVelocityX(0);
         }
+        if(this.fireSpcace.isDown)
+        {
+            this.fireLaser(player1.x, player1.y, 'laser');
+        }
+        if(this.fire0.isDown)
+        {
+            this.fireLaser(player2.x, player2.y, 'laser2');
+        }
     }
 
     movePlayers()
@@ -137,8 +147,8 @@ class mainGame extends Phaser.Scene
             this.movePlayer1();
             this.movePlayer2();
             this.score += 10;
-            console.log(player1.score);
-            console.log(player2.score);
+            // console.log(player1.score);
+            // console.log(player2.score);
         }       
     }
 
@@ -146,22 +156,22 @@ class mainGame extends Phaser.Scene
     {
         if(this.aKey.isDown)
         {
-            console.log("player move");
+            // console.log("player move");
             player1.setVelocityX(-100);
-            player1.score += 10;
+            // player1.score += 10;
         }
         else
         if(this.dKey.isDown)
         {
-            console.log("player move");
-            player2.score += 10;
+            // console.log("player move");
+            // player2.score += 10;
             player1.setVelocityX(100);
         }
     }
 
     movePlayer2()
     {
-        console.log("PLAYER 2");
+        //console.log("PLAYER 2");
         if(this.inputKey.left.isDown)
         {
             player2.setVelocityX(-100);
@@ -173,14 +183,14 @@ class mainGame extends Phaser.Scene
         }
     }
 
-        // fireLaser()
-    // {
-    //     laser = new laser(this, 300, 300, 'laser');
-    // }
-
-    createPlayer(x, y, key, player)
+    fireLaser(xPos, yPos, key)
     {
-        player = this.physics.add.sprite(x, y, key);
+        this.laser = this.createLaser(xPos, yPos, key);
+    }
+
+    createPlayer(xPos, yPos, key, player)
+    {
+        player = this.physics.add.sprite(xPos, yPos, key);
         player.health = 100;
         player.lives = 3; 
         player.isAlive = true;
@@ -190,13 +200,23 @@ class mainGame extends Phaser.Scene
         this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
         this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.fireSpcace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.fire0 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO);
         return player;
     }
 
-    createLaser(x, y)
+    createLaser(xPos, yPos, key)
     {
-        laser = this.physics.add.sprite(x, y);
+        this.laser = this.physics.add.sprite(xPos,yPos - 30, key);
+        this.laser.setVelocityY(-100);
+        //this.laser.setCollideWorldBounds(true);
+        console.log("create laser");
+        return this.laser;
+    }
+
+    createEnemies()
+    {
         
+        this.enenmy = this.physics.ass.sprite()
     }
 }
 
