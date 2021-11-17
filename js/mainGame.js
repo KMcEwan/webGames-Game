@@ -88,7 +88,7 @@ class mainGame extends Phaser.Scene
 END WORKING BEFORE CHANGING CODE TO ONE SCENE */
 
 
-class Enemy1 extends Phaser.GameObjects.Sprite {
+class Enemy extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y);
         this.setTexture('enemy');
@@ -98,43 +98,30 @@ class Enemy1 extends Phaser.GameObjects.Sprite {
         this.gameObject = this;
         this.deltaX = 3;
         this.deltaY = 3;
-    }
-
-    update() {
-        let k = Math.random() * 4;
-        k = Math.round(k);
-
-        if (k == 0) {
-            //this.moveUp();
-        }
-        else if (k == 2) {
-            this.moveLeft();
-        }
-        else if (k == 3) {
-            this.moveRight();
-        }
-    }
+    }   
 
 }
 
 
-class ShipLaser extends Phaser.GameObjects.Sprite {
+class cannonLaser extends Phaser.Physics.Arcade.Sprite {
 
-    constructor(scene, xPos, yPos, key) {
+    constructor(scene, xPos, yPos, key)
+    {
         super(scene, xPos, yPos, key);
-        this.setTexture(key);
-        this.setPosition(xPos, yPos);
-        this.speed = 10;
-        
-        //this.scene = scene;
-        scene.physics.world.enable(this);
-        scene.physics.add.collider(this, scene.enemies, this.handleHit, null, this);
+        this.body = this.scene.physics.add.sprite(xPos, yPos, key)
+        this.scene.physics.world.enable(this);
+        this.body.setVelocityY(-100);        
+        this.scene.physics.add.collider(this.body, this.scene.enemies, this.handleHit, null, this);
     }
 
+
     handleHit(laserSprite, enemySprite) {
+        //debugger;
+        console.log("enemy hit");
+       
         enemySprite.destroy(true);
         laserSprite.destroy(true);
-        console.log("enemy hit");
+       
     }
 
     preUpdate(time, delta) {
@@ -183,6 +170,13 @@ class mainGame extends Phaser.Scene
         player1 = this.createPlayer(200, 500, 'player1', player1);
         player2 = this.createPlayer(600, 500, 'player2', player2);
 
+
+        this.enemies = this.physics.add.group();
+        this.enemies2 = new Array();
+
+
+ 
+
     };
 
 
@@ -200,18 +194,40 @@ class mainGame extends Phaser.Scene
         }
         if(this.fireSpcace.isDown)
         {          
-            var shipLaser = new ShipLaser(this, player1.x, player1.y, 'laser');
-            this.add.existing(shipLaser);
-            this.lasers.push(shipLaser);
+            // var canLaser = new cannonLaser(this, player1.x, player1.y, 'laser');
+            //  this.add.existing(canLaser);
+            //  this.lasers.push(canLaser);
+           
         }
         if(this.fire0.isDown)
         {           
             console.log("fire");
-            var shipLaser = new ShipLaser(this, player2.x, player2.y, 'laser2');
+            var shipLaser = new cannonLaser(this, player2.x, player2.y, 'laser2');
             this.add.existing(shipLaser);
             this.lasers.push(shipLaser);
+
+               let k = 0;
+        for (k = 0; k < 21; k++) 
+        {
+            let x = Math.random() * 800;
+            let y = Math.random() * 400;
+
+            this.enemy = new Enemy(this, x, y);
+            this.add.existing(this.enemy);
+            this.enemies.add(this.enemy);
+            this.enemies2.push(this.enemy);
+
+            for (let j = 0; j < this.enemies2.length; j++)
+            {
+                let enemy = this.enemies2[j];
+                enemy.update();
+            }
+        }
             
         }  
+
+        
+        
     }
 
     checkPlayersScore()
