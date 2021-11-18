@@ -101,9 +101,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     // }
     constructor(scene, x, y) {
        super(scene, x, y);       
-       this.body = this.scene.physics.add.sprite(x, y, 'enemy')
+       this.body = this.scene.physics.add.sprite(x, y, 'enemy')  // remove this.body to have it added to the physics group, but this will stop velocity working
        scene.physics.world.enable(this);    
-       this.setVelocityY(100);
+       this.body.setVelocityY(100);
 
        
      
