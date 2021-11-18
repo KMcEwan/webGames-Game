@@ -88,17 +88,38 @@ class mainGame extends Phaser.Scene
 END WORKING BEFORE CHANGING CODE TO ONE SCENE */
 
 
-class Enemy extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y) {
-        super(scene, x, y);
-        this.setTexture('enemy');
-        this.setPosition(x, y);
-        scene.physics.world.enable(this);
+class Enemy extends Phaser.Physics.Arcade.Sprite {
+    // constructor(scene, x, y) {
+    //     super(scene, x, y);
+    //     this.setTexture('enemy');
+    //     this.setPosition(x, y);
+    //     scene.physics.world.enable(this);
 
-        this.gameObject = this;
-        this.deltaX = 3;
-        this.deltaY = 3;
+    //     this.gameObject = this;
+    //     this.deltaX = 3;
+    //     this.deltaY = 3;
+    // }
+    constructor(scene, x, y) {
+       super(scene, x, y);       
+       this.body = this.scene.physics.add.sprite(x, y, 'enemy')
+       scene.physics.world.enable(this);    
+       this.setVelocityY(100);
+
+       
+     
     }   
+
+    // constructor(scene, key)
+    // {
+
+    //     super(scene, key);
+    //     var ranXValue = Phaser.Math.Between(600, 1);
+    //     var ranVelocity = Phaser.Math.Between(500, 100);
+    //     this.body = this.scene.physics.add.sprite(ranXValue, 0, key)
+    //     this.scene.physics.world.enable(this);
+    //     this.body.setVelocityY(ranVelocity);        
+    //     //this.scene.physics.add.collider(this.body, this.scene.enemies, this.handleHit, null, this);
+    // }
 
 }
 
@@ -115,12 +136,12 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
     }
 
 
-    handleHit(laserSprite, enemySprite) {
+    handleHit(laser, enemy) {
         //debugger;
         console.log("enemy hit");
        
-        enemySprite.destroy(true);
-        laserSprite.destroy(true);
+        laser.destroy(true);
+        enemy.destroy(true);
        
     }
 
@@ -173,10 +194,6 @@ class mainGame extends Phaser.Scene
 
         this.enemies = this.physics.add.group();
         this.enemies2 = new Array();
-
-
- 
-
     };
 
 
@@ -207,20 +224,19 @@ class mainGame extends Phaser.Scene
             this.lasers.push(shipLaser);
 
                let k = 0;
-        for (k = 0; k < 21; k++) 
+        for (k = 0; k < 1; k++) 
         {
             let x = Math.random() * 800;
             let y = Math.random() * 400;
-
             this.enemy = new Enemy(this, x, y);
             this.add.existing(this.enemy);
-            this.enemies.add(this.enemy);
+            //this.enemies.add(this.enemy);
             this.enemies2.push(this.enemy);
 
             for (let j = 0; j < this.enemies2.length; j++)
             {
                 let enemy = this.enemies2[j];
-                enemy.update();
+                //enemy.update();
             }
         }
             
