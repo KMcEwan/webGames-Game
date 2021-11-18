@@ -90,7 +90,7 @@ END WORKING BEFORE CHANGING CODE TO ONE SCENE */
 
 class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, key) {
-       super(scene, x, y, key);    
+       super(scene, x, y, key);                 // Super calls parent class which is 
        
     }
 }
@@ -171,6 +171,15 @@ class mainGame extends Phaser.Scene
         player1 = this.createPlayer(200, 500, 'player1', player1);
         player2 = this.createPlayer(600, 500, 'player2', player2);
        
+        this.anims.create({
+            key: 'flash',
+            frames: [
+                { key: 'enemy',frame:1 },
+                { key: 'enemy',frame:2 },
+            ],
+            frameRate: 8,
+            repeat: -1
+        });
 
         this.enemies = this.physics.add.group();
         this.enemies2 = new Array();
@@ -206,9 +215,9 @@ class mainGame extends Phaser.Scene
                let k = 0;
         for (k = 0; k < 1; k++) 
         {
-            let x = Math.random() * 800;
-            let y = Math.random() * 400;
-            this.enemy = new Enemy(this, x, y, 'enemy');
+            let x = Math.random() * 800;           
+            this.enemy = new Enemy(this, x, 0, 'enemy');
+            this.enemy.play('flash');
             this.add.existing(this.enemy);
             this.enemies.add(this.enemy);
             this.enemies.setVelocityY(100);
