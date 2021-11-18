@@ -89,38 +89,10 @@ END WORKING BEFORE CHANGING CODE TO ONE SCENE */
 
 
 class Enemy extends Phaser.Physics.Arcade.Sprite {
-    // constructor(scene, x, y) {
-    //     super(scene, x, y);
-    //     this.setTexture('enemy');
-    //     this.setPosition(x, y);
-    //     scene.physics.world.enable(this);
-
-    //     this.gameObject = this;
-    //     this.deltaX = 3;
-    //     this.deltaY = 3;
-    // }
-    constructor(scene, x, y) {
-       super(scene, x, y);       
-       this.body = this.scene.physics.add.sprite(x, y, 'enemy')  // remove this.body to have it added to the physics group, but this will stop velocity working
-       scene.physics.world.enable(this);    
-       this.body.setVelocityY(100);
-
+    constructor(scene, x, y, key) {
+       super(scene, x, y, key);    
        
-     
-    }   
-
-    // constructor(scene, key)
-    // {
-
-    //     super(scene, key);
-    //     var ranXValue = Phaser.Math.Between(600, 1);
-    //     var ranVelocity = Phaser.Math.Between(500, 100);
-    //     this.body = this.scene.physics.add.sprite(ranXValue, 0, key)
-    //     this.scene.physics.world.enable(this);
-    //     this.body.setVelocityY(ranVelocity);        
-    //     //this.scene.physics.add.collider(this.body, this.scene.enemies, this.handleHit, null, this);
-    // }
-
+    }
 }
 
 
@@ -132,17 +104,25 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
         this.body = this.scene.physics.add.sprite(xPos, yPos, key)
         this.scene.physics.world.enable(this);
         this.body.setVelocityY(-100);        
-        this.scene.physics.add.collider(this.body, this.scene.enemies, this.handleHit, null, this);
+        this.scene.physics.add.collider(this.body, this.scene.enemies, this.bulletHitEnemy, null, this);
+        this.scene.physics.add.overlap(player2, this.scene.enemies,  this.enemyHitPlayer, null, this);
+        this.scene.physics.add.overlap(player1, this.scene.enemies,  this.enemyHitPlayer, null, this);
     }
 
 
-    handleHit(laser, enemy) {
-        //debugger;
-        console.log("enemy hit");
-       
+    bulletHitEnemy(laser, enemy)
+    {     
         laser.destroy(true);
-        enemy.destroy(true);
-       
+        enemy.destroy(true);       
+    }
+
+    
+    enemyHitPlayer(player, enemy) 
+    {      
+       console.log("enemy hit");
+       player.score -= 10;
+       enemy.destroy(true);        
+       console.log("player score :" + player.score);
     }
 
     preUpdate(time, delta) {
@@ -190,7 +170,7 @@ class mainGame extends Phaser.Scene
         this.add.image(400, 300, 'background');  
         player1 = this.createPlayer(200, 500, 'player1', player1);
         player2 = this.createPlayer(600, 500, 'player2', player2);
-
+       
 
         this.enemies = this.physics.add.group();
         this.enemies2 = new Array();
@@ -228,9 +208,10 @@ class mainGame extends Phaser.Scene
         {
             let x = Math.random() * 800;
             let y = Math.random() * 400;
-            this.enemy = new Enemy(this, x, y);
+            this.enemy = new Enemy(this, x, y, 'enemy');
             this.add.existing(this.enemy);
-            //this.enemies.add(this.enemy);
+            this.enemies.add(this.enemy);
+            this.enemies.setVelocityY(100);
             this.enemies2.push(this.enemy);
 
             for (let j = 0; j < this.enemies2.length; j++)
@@ -241,7 +222,7 @@ class mainGame extends Phaser.Scene
         }
             
         }  
-
+        //this.scene.physics.add.collider(player2, this.enemies, this.handleHit, null, this);
         
         
     }
@@ -324,6 +305,7 @@ class mainGame extends Phaser.Scene
         this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.fireSpcace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.fire0 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO);
+        
         return player;
     }
 
