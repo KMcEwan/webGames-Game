@@ -88,12 +88,27 @@ class mainGame extends Phaser.Scene
 END WORKING BEFORE CHANGING CODE TO ONE SCENE */
 
 
-class Enemy extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, key) {
+class Enemy extends Phaser.Physics.Arcade.Sprite
+{
+    constructor(scene, x, y, key)
+    {
        super(scene, x, y, key);                 // Super calls parent class which is 
-       
+       this.anims.create
+       ({
+        key: 'flash',
+        frames: [
+            { key: 'enemy',frame:0 },
+            { key: 'enemy',frame:1 },
+            { key: 'enemy',frame:2 },
+        ],
+        frameRate: 2,
+        repeat: -1
+    });
+
     }
+
 }
+
 
 
 class cannonLaser extends Phaser.Physics.Arcade.Sprite {
@@ -103,10 +118,11 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
         super(scene, xPos, yPos, key);
         this.body = this.scene.physics.add.sprite(xPos, yPos, key)
         this.scene.physics.world.enable(this);
-        this.body.setVelocityY(-100);        
+        this.body.setVelocityY(-500);        
         this.scene.physics.add.collider(this.body, this.scene.enemies, this.bulletHitEnemy, null, this);
         this.scene.physics.add.overlap(player2, this.scene.enemies,  this.enemyHitPlayer, null, this);
         this.scene.physics.add.overlap(player1, this.scene.enemies,  this.enemyHitPlayer, null, this);
+        this.scene.physics.add.overlap(building1, this.scene.enemies, this.bulletHitEnemy, null, this);
     }
 
 
@@ -114,21 +130,21 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
     {     
         laser.destroy(true);
         enemy.destroy(true);       
+        //scene.enemyCount--;
     }
 
     
     enemyHitPlayer(player, enemy) 
     {      
-       console.log("enemy hit");
+       //console.log("enemy hit");
        player.score -= 10;
        enemy.destroy(true);        
        console.log("player score :" + player.score);
     }
 
-    preUpdate(time, delta) {
-        if(this.active == false){return;}
-        super.preUpdate(time, delta);
-        this.y -= this.speed;
+    preUpdate() 
+    {
+        this.y -= this.body;
     }
 }
 
@@ -159,9 +175,12 @@ class mainGame extends Phaser.Scene
         let thirdWave;
         let ForthWave;
 
-
+        /* BUILDINGS */
+        let building;
+        let building1 
 
         this.lasers = new Array();
+       
     }
 
     create()
@@ -170,17 +189,17 @@ class mainGame extends Phaser.Scene
         this.add.image(400, 300, 'background');  
         player1 = this.createPlayer(200, 500, 'player1', player1);
         player2 = this.createPlayer(600, 500, 'player2', player2);
-       
-        this.anims.create({
-            key: 'flash',
-            frames: [
-                { key: 'enemy',frame:1 },
-                { key: 'enemy',frame:2 },
-            ],
-            frameRate: 8,
-            repeat: -1
-        });
 
+
+        building1 = this.createBuilding(75, 700, 'building1', building1);
+        building2 = this.createBuilding(225, 700, 'building2', building2);
+        building3 = this.createBuilding(375, 700, 'building3', building3);
+        building4 = this.createBuilding(525, 700, 'building4', building4);
+
+
+
+        this.enemyCount = 0;
+      
         this.enemies = this.physics.add.group();
         this.enemies2 = new Array();
     };
@@ -197,20 +216,23 @@ class mainGame extends Phaser.Scene
         {
             player1.setVelocityX(0);
             player2.setVelocityX(0);
+            player1.play('playerStationary');
         }
         if(this.fireSpcace.isDown)
         {          
-            // var canLaser = new cannonLaser(this, player1.x, player1.y, 'laser');
-            //  this.add.existing(canLaser);
-            //  this.lasers.push(canLaser);
+            var canLaser = new cannonLaser(this, player1.x, player1.y, 'laser');
+             this.add.existing(canLaser);
+             this.lasers.push(canLaser);
+
+
            
         }
         if(this.fire0.isDown)
         {           
             console.log("fire");
-            var shipLaser = new cannonLaser(this, player2.x, player2.y, 'laser2');
-            this.add.existing(shipLaser);
-            this.lasers.push(shipLaser);
+            var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2');
+            this.add.existing(canLaser);
+            this.lasers.push(canLaser);
 
                let k = 0;
         for (k = 0; k < 1; k++) 
@@ -222,12 +244,8 @@ class mainGame extends Phaser.Scene
             this.enemies.add(this.enemy);
             this.enemies.setVelocityY(100);
             this.enemies2.push(this.enemy);
-
-            for (let j = 0; j < this.enemies2.length; j++)
-            {
-                let enemy = this.enemies2[j];
-                //enemy.update();
-            }
+            this.enemyCount++;
+            console.log("Enemies in scene : " + this.enemyCount);
         }
             
         }  
@@ -280,11 +298,13 @@ class mainGame extends Phaser.Scene
         if(this.aKey.isDown)
         {
             player1.setVelocityX(-100);
+            player1.play('playerMoveLeft');
         }
         else
         if(this.dKey.isDown)
         {
             player1.setVelocityX(100);
+            player1.play('playerMoveRight');
         }
     }
 
@@ -310,12 +330,52 @@ class mainGame extends Phaser.Scene
         player.score = 0; 
         player.setCollideWorldBounds(true); 
 
+
+        this.anims.create
+       ({
+        key: 'playerMoveLeft',
+        frames: [
+            { key: 'player1',frame:0 },
+        ],
+        frameRate: 24,
+        repeat: 0
+    });
+
+    this.anims.create
+    ({
+     key: 'playerMoveRight',
+     frames: [
+         { key: 'player1',frame:2 },
+     ],
+     frameRate: 24,
+     repeat: 0
+ });
+
+ this.anims.create
+ ({
+  key: 'playerStationary',
+  frames: [
+      { key: 'player1',frame:1 },
+  ],
+  frameRate: 24,
+  repeat: 0
+});
+
         this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
         this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.fireSpcace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.fire0 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO);
         
         return player;
+    }
+
+    createBuilding(xPos, yPos, key, building)
+    {
+        building = this.physics.add.sprite(xPos, yPos, key);
+        building.health = 100;
+        building.isAlive = true;
+
+        return building;
     }
 
 }
