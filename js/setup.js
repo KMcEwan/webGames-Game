@@ -33,4 +33,6 @@ building1,
 building2,
 building3,
 building4,
+ground,
+topGround,
 game = new Phaser.Game(config);

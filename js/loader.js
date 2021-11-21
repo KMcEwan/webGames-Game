@@ -17,6 +17,7 @@ class loader extends Phaser.Scene
         this.load.image('building3', '../assets/building3.png');
         this.load.image('building4', '../assets/building4.png');
         this.load.image('building5', '../assets/building5.png');
+        this.load.image('ground', '../assets/ground2.png');
 
 
         /* SPRITE SHEETS OF SCENE PLAYERS*/

@@ -1,98 +1,9 @@
-
-/*WORKING BEFORE CHANGING CODE TO ONE SCENE 
-class mainGame extends Phaser.Scene
-{
-    
-    constructor ()
-    {
-        super({key: "gameKey"});
-        var laser;
-    }
-
-    preload()
-    {
-
-    };
-
-    create()
-    {
-        this.add.image(400, 300, 'background');  
-        player1 = new player (this, 100, 100,'player1', 0);
-        player2 = new player (this, 200, 100,'player2', 1);      
-        
-    };
-
-    update()
-    {
-
-        if(!player1.player1Movement.left.isDown || !player1.player1Movement.right.isDown || !player2.player2Movement.left2.isDown || !player2.player2Movement.right2.isDown) 
-        {
-            player1.setVelocityX(0);
-            player2.setVelocityX(0);
-        }
-
-       
-        this.fireLaser();
-        this.movePlayers();
-    }
-
-    movePlayers()
-    {
-        if(player1.player1Movement.left.isDown || player1.player1Movement.right.isDown || player2.player2Movement.left2.isDown || player2.player2Movement.right2.isDown)
-        {
-            this.movePlayer1();
-            this.movePlayer2();
-            //console.log("movePlayers");
-            player1.score += 10;
-            console.log(player1.score);
-        }       
-    }
-
-    fireLaser()
-    {
-        laser = new laser(this, 300, 300, 'laser');
-    }
-    movePlayer1()
-    {
-        if(player1.player1Movement.left.isDown)
-        {
-            console.log("player move");
-            player1.setVelocityX(-100);
-        }
-        else
-        if(player1.player1Movement.right.isDown)
-        {
-            console.log("player move");
-            player1.setVelocityX(100);
-        }
-    }
-
-    movePlayer2()
-    {
-        console.log("PLAYER 2");
-        if(player2.player2Movement.left2.isDown)
-        {
-            console.log("player move");
-            player2.setVelocityX(-100);
-        }
-        else
-        if(player2.player2Movement.right2.isDown)
-        {
-            console.log("player move");
-            player2.setVelocityX(100);
-        }
-    }
-
-
-}
-END WORKING BEFORE CHANGING CODE TO ONE SCENE */
-
-
 class Enemy extends Phaser.Physics.Arcade.Sprite
 {
     constructor(scene, x, y, key)
     {
-       super(scene, x, y, key);                 // Super calls parent class which is 
+       super(scene, x, y, key);                                                     // Super calls parent class which is Phaser.Physics.Arcade.Sprite
+       //this.scene.physics.world.enable(this);
        this.anims.create
        ({
         key: 'flash',
@@ -104,12 +15,8 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         frameRate: 2,
         repeat: -1
     });
-
     }
-
 }
-
-
 
 class cannonLaser extends Phaser.Physics.Arcade.Sprite {
 
@@ -119,10 +26,16 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
         this.body = this.scene.physics.add.sprite(xPos, yPos, key)
         this.scene.physics.world.enable(this);
         this.body.setVelocityY(-500);        
+
+
         this.scene.physics.add.collider(this.body, this.scene.enemies, this.bulletHitEnemy, null, this);
+
+
+
         this.scene.physics.add.overlap(player2, this.scene.enemies,  this.enemyHitPlayer, null, this);
         this.scene.physics.add.overlap(player1, this.scene.enemies,  this.enemyHitPlayer, null, this);
-        this.scene.physics.add.overlap(building1, this.scene.enemies, this.bulletHitEnemy, null, this);
+       // this.scene.physics.add.overlap(building1, this.scene.enemies, this.bulletHitEnemy, null, this);       // bring back in when buildings added back in
+        this.scene.physics.add.overlap(this.body, topGround, this.laserOutOfScreen, null, this);
     }
 
 
@@ -130,16 +43,26 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
     {     
         laser.destroy(true);
         enemy.destroy(true);       
-        //scene.enemyCount--;
+        this.scene.enemyCount--;
+        //this.playerChar.score++;
+       // console.log("PLAYER SCORE : " + this.playerChar.score);
+       // console.log("enemies in scene : " + this.scene.enemyCount);
     }
 
     
     enemyHitPlayer(player, enemy) 
     {      
-       //console.log("enemy hit");
+       console.log("enemy hit");
        player.score -= 10;
-       enemy.destroy(true);        
-       console.log("player score :" + player.score);
+       enemy.destroy(true);      
+       //this.scene.enemyCount--;  
+       console.log("PLAYER SCORE : " + player.score);
+      // console.log("player score :" + player.score);
+    }
+
+    laserOutOfScreen(laser, topGround)
+    {
+        laser.destroy(true);
     }
 
     preUpdate() 
@@ -176,12 +99,13 @@ class mainGame extends Phaser.Scene
         let ForthWave;
 
         /* BUILDINGS */
-        let building;
-        let building1 
+
+       
 
         this.lasers = new Array();
-       
+        
     }
+
 
     create()
     {
@@ -191,18 +115,34 @@ class mainGame extends Phaser.Scene
         player2 = this.createPlayer(600, 500, 'player2', player2);
 
 
-        building1 = this.createBuilding(75, 700, 'building1', building1);
-        building2 = this.createBuilding(225, 700, 'building2', building2);
-        building3 = this.createBuilding(375, 700, 'building3', building3);
-        building4 = this.createBuilding(525, 700, 'building4', building4);
+        // building1 = this.createBuilding(75, 700, 'building1', building1);
+        // building2 = this.createBuilding(225, 700, 'building2', building2);
+        // building3 = this.createBuilding(375, 700, 'building3', building3);
+        // building4 = this.createBuilding(525, 700, 'building4', building4);
 
-
+        ground = this.createGround(300, 796, 'ground', ground);
+        topGround = this.createGround(300, 1, 'ground', topGround);
+        //top = this.createGround(300, 796, 'ground', top);
 
         this.enemyCount = 0;
-      
+        this.enemiesInScene = 0;
+        this.firstWave = 10;
+        this.secondWave = 20;
+        this.thirdWave = 30;
+        this.ForthWave = 40;
         this.enemies = this.physics.add.group();
         this.enemies2 = new Array();
+        this.physics.add.overlap(ground, this.enemies, this.enemyOutOfScreen, null, this);
     };
+
+    enemyOutOfScreen(ground, enemy)
+    {
+        enemy.destroy(true);
+        this.enemyCount--;
+        console.log("OBJECT DELETED");
+        //console.log("ENEMIES OUT OF SCREEN");
+        //console.log("enemies in scene : " + this.scene.enemyCount);
+    }
 
 
     update()
@@ -220,7 +160,7 @@ class mainGame extends Phaser.Scene
         }
         if(this.fireSpcace.isDown)
         {          
-            var canLaser = new cannonLaser(this, player1.x, player1.y, 'laser');
+            var canLaser = new cannonLaser(this, player1.x, player1.y, 'laser', player1);
              this.add.existing(canLaser);
              this.lasers.push(canLaser);
 
@@ -229,29 +169,14 @@ class mainGame extends Phaser.Scene
         }
         if(this.fire0.isDown)
         {           
-            console.log("fire");
-            var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2');
+           // console.log("fire");
+            var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2', player2);
             this.add.existing(canLaser);
-            this.lasers.push(canLaser);
-
-               let k = 0;
-        for (k = 0; k < 1; k++) 
-        {
-            let x = Math.random() * 800;           
-            this.enemy = new Enemy(this, x, 0, 'enemy');
-            this.enemy.play('flash');
-            this.add.existing(this.enemy);
-            this.enemies.add(this.enemy);
-            this.enemies.setVelocityY(100);
-            this.enemies2.push(this.enemy);
-            this.enemyCount++;
-            console.log("Enemies in scene : " + this.enemyCount);
-        }
-            
+            this.lasers.push(canLaser);           
         }  
         //this.scene.physics.add.collider(player2, this.enemies, this.handleHit, null, this);
         
-        
+        this.checkPlayersScore();
     }
 
     checkPlayersScore()
@@ -268,7 +193,27 @@ class mainGame extends Phaser.Scene
 
         if(this.maxScore < 300)
         {
-            this.enemiesInScene = this.firstWave - this.enemyCount;           
+            //console.log("ENEMIES ALIVE : "+ this.enemyCount);
+            this.enemiesInScene = this.firstWave - this.enemyCount;         
+           // console.log("ENEMIES IN SCENE :" + this.enemiesInScene);            
+
+            for (let k = 0; k < this.enemiesInScene; k++) 
+            {
+                //console.log("ENEMIES ALIVE : "+ this.enemyCount);
+                let x = Phaser.Math.Between(590, 10);   
+                let vel = Phaser.Math.Between(300, 10);   
+               // console.log("velocity : ", vel);    
+                this.enemy = new Enemy(this, x, 0, 'enemy');
+                this.enemy.play('flash');
+                this.add.existing(this.enemy);
+                this.enemies.add(this.enemy);
+                //this.enemies.setVelocityY(vel);
+                this.enemy.setVelocityY(vel);
+                this.enemies2.push(this.enemy);
+                this.enemyCount++;
+               // console.log("ENEMIES TO BE SPAWNED : " + this.enemiesInScene);
+               // console.log("COUNT OF ENEMIES : " + this.enemyCount);
+            }
         }
         else
         if(this.maxScore < 600)
@@ -378,383 +323,13 @@ class mainGame extends Phaser.Scene
         return building;
     }
 
+
+    createGround(xPos, yPos, key, ground)
+    {
+        ground = this.physics.add.sprite(xPos, yPos, key);
+       // this.scene.physics.add.overlap(ground, this.scene.enemies, this.enemyOutOfScreen, null, this);
+        return ground;
+    }
 }
 
 
-
-
-
-
-    // fireLaser(xPos, yPos, key)
-    // {
-    //     this.laser = this.createLaser(xPos, yPos, key);
-    // }
-
-    // createPlayer(xPos, yPos, key, player)
-    // {
-    //     player = this.physics.add.sprite(xPos, yPos, key);
-    //     player.health = 100;
-    //     player.lives = 3; 
-    //     player.isAlive = true;
-    //     player.score = 0; 
-    //     player.setCollideWorldBounds(true); 
-
-    //     this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
-    //     this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-    //     this.fireSpcace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    //     this.fire0 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO);
-    //     return player;
-    // }
-
-    // createLaser(xPos, yPos, key)
-    // {
-    //     this.laser = this.physics.add.sprite(xPos,yPos - 30, key);
-    //     this.laser.setVelocityY(-100);
-    //     //this.laser.setCollideWorldBounds(true);
-    //     //console.log("create laser");
-    //     return this.laser;
-    // }
-
-    // createEnemies(key)
-    // {
-    //     this.enemies = physics.add.group();
-
-    //     var ranXValue = Phaser.Math.Between(300, 1);
-    //     var ranVelocity = Phaser.Math.Between(500, 100);
-    //     this.enemy = this.physics.add.sprite(ranXValue, 100, key)
-    //     this.enemy.setVelocityY(ranVelocity);
-    //     this.enemyCount++;
-    //     console.log("Enemy count " + this.enemyCount);
-
-        
-    // }
-
-   
-
-    // Bullet = new Phaser.Class({
-
-    //     Extends: Phaser.GameObjects.Image,
-
-    //     initialize:
-
-    //     function Bullet (scene)
-    //     {
-    //         Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
-
-    //         this.speed = Phaser.Math.GetSpeed(400, 1);
-    //     },
-
-    //     fire: function (x, y)
-    //     {
-    //         this.setPosition(x, y - 50);
-
-    //         this.setActive(true);
-    //         this.setVisible(true);
-    //     },
-
-    //     update: function (time, delta)
-    //     {
-    //         this.y -= this.speed * delta;
-
-    //         if (this.y < -50)
-    //         {
-    //             this.setActive(false);
-    //             this.setVisible(false);
-    //         }
-    //     }
-
-    // });
-
-    // bullets = this.add.group({
-    //     classType: Bullet,
-    //     maxSize: 10,
-    //     runChildUpdate: true
-    // });
-
-
-
-// class enemies extends Phaser.Physics.Arcade.Sprite
-// {
-//     enemy()
-//     {
-//         var ranXValue = Phaser.Math.Between(300, 1);
-//         var ranVelocity = Phaser.Math.Between(500, 100);
-//         this.enemy = this.physics.add.sprite(ranXValue, 100, key)
-//         this.enemy.setVelocityY(ranVelocity);
-//         this.enemyCount++;
-//         console.log("Enemy count " + this.enemyCount);
-//     }
-
-//     Enemies = this.add.group({
-//         classType: enemies,
-//         maxSize: 10,
-//         //runChildUpdate: true
-//     });
-
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let player1;
-// let player2;
-// let inputKey;
-// let aKey, dKey, spaceShoot, zeroShoot;
-// let testKey;
-
-// // Player bullets
-// var bullets;
-// var ship;
-// var speed;
-// var stats;
-// var cursors;
-// var lastFired = 0;
-
-
-
-// // Enemy bullets
-// let enemyBullets;
-// let enemyBulletCount = 0;
-// let enemy;
-
-// function preload ()                                                                                         // loads all assets
-// {
-    
-//     this.load.image('player1', '../assets/pinkPlayer.png');
-//     this.load.image('player2', '../assets/bluePlayer.png');
-//     this.load.image('background', '../assets/background.png');
-//     this.load.image('laser', '../assets/laser.png');
-//     this.load.image('enemyBullets', '../assets/enemy.png');
-// }
-
-// function create ()
-// {
-//    this.add.image(400, 300, 'background');                                                                  // Load background into scene, 
-//    inputKey = this.input.keyboard.createCursorKeys();                                                       // create keyboard controls
-//    initPlayer2Controls.call(this);
-
-
-//    spaceShoot = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);    
-//    zeroShoot = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-//    testKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-   
-//    player1 = this.createPlayer(200, 500, 'player1');
-//    player2 = this.createPlayer(600, 500, 'player2');
-
-   
-//    enemy = this.createEnemyBullets(game, 'enemyBullets');
-   
-//    enemy.setVelocityY(10);
-
-
-//    console.log("player health" + player1.health);
-//    this.physics.add.collider(player1, enemy);
-// //    this.physics.add.collider(bullets, enemy);
-
-//     // enemyBullets = [];
-//     // for(let i = 0; i < 10; i++)
-//     // {
-//     //     enemyBullets[i] = enemyBullets.push(this.createEnemyBullets(game, 'enemyBullets'));
-//     // }
-
-//     //enemyBullets = this.createEnemyBullets(game, 'enemyBullets');                                             // Spawn first enemy bullet
-
-//     //enemy = this.createEnemyBullets(game, 'enemyBullets');
-
-    
-
-//     // BULLET 
-//    var Bullet = new Phaser.Class({
-
-//     Extends: Phaser.GameObjects.Image,
-
-//     initialize:
-
-//     function Bullet (scene)
-//     {
-//         Phaser.GameObjects.Image.call(this, scene, 0, 0, 'laser');
-
-//         this.speed = Phaser.Math.GetSpeed(400, 1);              // speed of lasers
-//     },
-
-//     fire: function (x, y)   
-//     {
-//         this.setPosition(x, y - 10);                            // give bullet position, x and y are set to player pos within controls
-
-//         this.setActive(true);
-//         this.setVisible(true);
-//     },
-
-//     update: function (time, delta)
-//     {
-//         this.y -= this.speed * delta;
-
-//         if (this.y < -50)
-//         {
-//             this.setActive(false);
-//             this.setVisible(false);
-//         }
-//     },
-//     });
-
-//     bullets = this.physics.add.group({
-//     classType: Bullet,
-//     maxSize: 10,
-//     runChildUpdate: true
-//     })
-   
-
-// this.physics.add.collider(bullets, enemy, testFunc());
-
-
-
-// }  
-// // END OF BULLET
-
-// function testFunc()
-// {
-//     console.log("collision");
-//     enemy.destroy();
-// }
-
-
-// function update()
-// {
-//     checkMovement();  
-// //     if (enemyBulletCount < 20)  
-// //     {
-// //         //enemyBullets = [];
-// //         enemyBullets = this.createEnemyBullets(game, 'enemyBullets');
-// //         enemyBulletCount++;
-// //         enemyBullets.setVelocityY(Phaser.Math.Between(60, 150));
-// //     }
-   
-
-// //    // console.log("position" + enemyBullets.y);
-// //     for(let i = 0; i < enemyBullets.maxSize; i++)
-// //     {
-// //         if(enemyBullets.y > game.config.height)
-// //     {
-// //         enemyBullets.destroy();
-// //         enemyBulletCount--;
-// //         console.log("count" + enemyBulletCount);
-// //     }
-// //     }
-    
-// }
-
-// function checkMovement()
-// {
-//     checkPlayer1Movement();
-//     checkPlayer2Movement();
-// }
-
-// function initPlayer2Controls()
-// {   
-//   aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
-//   dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-// }
-
-// function checkPlayer1Movement()
-// {
-//     //test
-//     if(testKey.isDown)
-//     {
-//         player1.health -= 10;
-//         console.log(player1.health);
-//     }
-//     // End of testing
-
-//     player1.setVelocityY(0);
-
-//     if(aKey.isDown&& player1.x >= 15)
-//     {
-//         player1.setVelocityX(-300);
-//     }
-//     else if(dKey.isDown&& player1.x <= 785)
-//     {
-//         player1.body.setVelocityX(300);   
-//     }
-//     else if(spaceShoot.isDown)
-//     {
-//         //fire bullet 
-//     }
-//     else
-//     {
-//         player1.body.setVelocityX(0);
-//     }
-// }
-
-// function checkPlayer2Movement()
-// {
-//    player2.setVelocityY(0);
-
-//     if(inputKey.left.isDown && player2.x >= 15)
-//     {
-//         console.log(player2.x);
-//         player2.setVelocityX(-300);
-//     }
-//     else if(inputKey.right.isDown && player2.x <= 785)
-//     {      
-//         player2.body.setVelocityX(300);
-//     }
-//     else if(zeroShoot.isDown)
-//     {        
-//         var bullet = bullets.get()
-
-//         if (bullet)
-//         {
-//             bullet.fire(player1.x, player1.y);          
-//         }
-//     }
-//     else
-//     {
-//         player2.body.setVelocityX(0);
-//     }
-
-// }
-
-
-//  function createPlayer(x, y, key)
-//  {
-//     let player = this.physics.add.sprite(x, y, key);
-//     player.health = 100;  
-//     return player;
-//  }
-
-// createPlayer.prototype.playerDamage = function()        // prototype causes inheritance from createPlayer
-// {
-//     this.health -= 10;
-// }
-
-// //  function createBullet(key, player)
-// //  {
-// //     bullet = this.load.image(key);
-// //     setPosition(player.x, player.y);
-// //     setActive(true);
-// //     setVisible(true);
-// //  }
-
-//  function fire()
-//  {
-
-//  }
- 
-// function createEnemyBullets(game, key)
-// {
-//     let x = Phaser.Math.Between(0, game.config.width);
-//     let y = 0.5;
-
-//     let enemyBullet = this.physics.add.sprite(x,y,key);
-//     this.alive = true;
-//     return enemyBullet;
-// }
