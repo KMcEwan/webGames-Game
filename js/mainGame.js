@@ -22,19 +22,21 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
 
     constructor(scene, xPos, yPos, key, playerKey)
     {
-        super(scene, xPos, yPos, key);
+        super(scene, xPos, yPos, key, playerKey);
         this.body = this.scene.physics.add.sprite(xPos, yPos, key)
         this.scene.physics.world.enable(this);
         this.body.setVelocityY(-500);        
        // console.log(playerKey);
+        
+        this.player = playerKey;
+        //this.scene.physics.add.collider(this.body, this.scene.enemies, function (body, enemy) {this.bulletHitEnemy(enemy, playerKey)}, null, this);
 
         this.scene.physics.add.collider(this.body, this.scene.enemies, this.bulletHitEnemy, null, this);
 
 
+        //this.scene.physics.add.overlap(building1, this.scene.enemies, this.bulletHitEnemy, null, this);       // bring back in when buildings added back in
 
-        // this.scene.physics.add.overlap(player2, this.scene.enemies,  this.enemyHitPlayer, null, this);
-        // this.scene.physics.add.overlap(player1, this.scene.enemies,  this.enemyHitPlayer, null, this);
-       // this.scene.physics.add.overlap(building1, this.scene.enemies, this.bulletHitEnemy, null, this);       // bring back in when buildings added back in
+
         this.scene.physics.add.overlap(this.body, topGround, this.laserOutOfScreen, null, this);
     }
 
@@ -44,20 +46,9 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
         laser.destroy(true);
         enemy.destroy(true);       
         this.scene.enemyCount--;
-       // console.log("PLAYER SCORE : " + this.playerChar.score);
-       // console.log("enemies in scene : " + this.scene.enemyCount);
+        this.player.score += 10;
     }
 
-    
-    // enemyHitPlayer(player, enemy) 
-    // {      
-    //    console.log("enemy hit");
-    //    player.score -= 10;
-    //    enemy.destroy(true);      
-    //    //this.scene.enemyCount--;  
-    //    console.log("PLAYER SCORE : " + player.score);
-    //   // console.log("player score :" + player.score);
-    // }
 
     laserOutOfScreen(laser, topGround)
     {
@@ -118,7 +109,7 @@ class mainGame extends Phaser.Scene
         this.add.image(400, 300, 'background');  
         player1 = this.createPlayer(200, 500, 'player1', player1);
         player2 = this.createPlayer(600, 500, 'player2', player2);
-
+        //console.log("player score", player1.score);
 
         // building1 = this.createBuilding(75, 700, 'building1', building1);
         // building2 = this.createBuilding(225, 700, 'building2', building2);
@@ -144,13 +135,16 @@ class mainGame extends Phaser.Scene
         this.lastFired = new Date().getTime();
         this.shotFreq = 300;
     };
+
+
+
     enemyHitPlayer(player, enemy) 
     {      
-       console.log("enemy hit");
+       //console.log("enemy hit");
        player.health -= 10;
        enemy.destroy(true);      
        this.scene.enemyCount--;  
-       console.log("PLAYER SCORE : " + player.health);
+     // console.log("PLAYER HEALTH : " + player.health);
       // console.log("player score :" + player.score);
     }
 
@@ -184,6 +178,8 @@ class mainGame extends Phaser.Scene
         if(this.specialAttack.isDown || this.healBoth.isDown || this.healSelf.isDown)
         {
             this.specials();
+            console.log("player 1 score ", player1.score);
+            console.log("player 2 score ", player2.score);
         }
         
         
