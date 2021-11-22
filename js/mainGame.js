@@ -32,8 +32,8 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
 
 
 
-        this.scene.physics.add.overlap(player2, this.scene.enemies,  this.enemyHitPlayer, null, this);
-        this.scene.physics.add.overlap(player1, this.scene.enemies,  this.enemyHitPlayer, null, this);
+        // this.scene.physics.add.overlap(player2, this.scene.enemies,  this.enemyHitPlayer, null, this);
+        // this.scene.physics.add.overlap(player1, this.scene.enemies,  this.enemyHitPlayer, null, this);
        // this.scene.physics.add.overlap(building1, this.scene.enemies, this.bulletHitEnemy, null, this);       // bring back in when buildings added back in
         this.scene.physics.add.overlap(this.body, topGround, this.laserOutOfScreen, null, this);
     }
@@ -49,15 +49,15 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
     }
 
     
-    enemyHitPlayer(player, enemy) 
-    {      
-       console.log("enemy hit");
-       player.score -= 10;
-       enemy.destroy(true);      
-       //this.scene.enemyCount--;  
-       console.log("PLAYER SCORE : " + player.score);
-      // console.log("player score :" + player.score);
-    }
+    // enemyHitPlayer(player, enemy) 
+    // {      
+    //    console.log("enemy hit");
+    //    player.score -= 10;
+    //    enemy.destroy(true);      
+    //    //this.scene.enemyCount--;  
+    //    console.log("PLAYER SCORE : " + player.score);
+    //   // console.log("player score :" + player.score);
+    // }
 
     laserOutOfScreen(laser, topGround)
     {
@@ -112,6 +112,8 @@ class mainGame extends Phaser.Scene
 
     create()
     {
+        
+       
         this.inputKey = this.input.keyboard.createCursorKeys(); 
         this.add.image(400, 300, 'background');  
         player1 = this.createPlayer(200, 500, 'player1', player1);
@@ -136,21 +138,24 @@ class mainGame extends Phaser.Scene
         this.enemies = this.physics.add.group();
         this.enemies2 = new Array();
         this.physics.add.overlap(ground, this.enemies, this.enemyOutOfScreen, null, this);
+        this.physics.add.overlap(player2, this.enemies,  this.enemyHitPlayer, null, this);
+        this.physics.add.overlap(player1, this.enemies,  this.enemyHitPlayer, null, this);
 
         this.lastFired = new Date().getTime();
         this.shotFreq = 300;
     };
-
-    enemyOutOfScreen(ground, enemy)
-    {
-        enemy.destroy(true);
-        this.enemyCount--;
-        console.log("OBJECT DELETED");
-        //console.log("ENEMIES OUT OF SCREEN");
-        //console.log("enemies in scene : " + this.scene.enemyCount);
+    enemyHitPlayer(player, enemy) 
+    {      
+       console.log("enemy hit");
+       player.health -= 10;
+       enemy.destroy(true);      
+       this.scene.enemyCount--;  
+       console.log("PLAYER SCORE : " + player.health);
+      // console.log("player score :" + player.score);
     }
 
 
+    /* UPDATE FUNCTION START */
     update()
     { 
         if(this.aKey.isDown || this.dKey.isDown || this.inputKey.left.isDown || this.inputKey.right.isDown)
@@ -181,9 +186,20 @@ class mainGame extends Phaser.Scene
             this.specials();
         }
         
+        
+
         this.checkPlayersScore();
         
+    }/* UPDATE FUNCTION END */
+
+
+    enemyOutOfScreen(ground, enemy)
+    {
+        enemy.destroy(true);
+        this.enemyCount--;
     }
+
+
 
     checkPlayersScore()
     {
@@ -236,17 +252,17 @@ class mainGame extends Phaser.Scene
 
     specials()
     {
-        if(this.specialAttack.isDown)
+        if(Phaser.Input.Keyboard.JustDown(this.specialAttack))
         {
             console.log("special attack");
         }
         else 
-        if(this.healSelf.isDown)
+        if(Phaser.Input.Keyboard.JustDown(this.healSelf))
         {
-            console.log("Health self");
+            console.log("Heal self");
         }
         else
-        if(this.healBoth.isDown)
+        if(Phaser.Input.Keyboard.JustDown(this.healBoth))
         {
             console.log("Heal both");
         }
