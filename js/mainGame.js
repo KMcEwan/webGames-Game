@@ -20,13 +20,13 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
 
 class cannonLaser extends Phaser.Physics.Arcade.Sprite {
 
-    constructor(scene, xPos, yPos, key)
+    constructor(scene, xPos, yPos, key, playerKey)
     {
         super(scene, xPos, yPos, key);
         this.body = this.scene.physics.add.sprite(xPos, yPos, key)
         this.scene.physics.world.enable(this);
         this.body.setVelocityY(-500);        
-
+       // console.log(playerKey);
 
         this.scene.physics.add.collider(this.body, this.scene.enemies, this.bulletHitEnemy, null, this);
 
@@ -44,7 +44,6 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
         laser.destroy(true);
         enemy.destroy(true);       
         this.scene.enemyCount--;
-        //this.playerChar.score++;
        // console.log("PLAYER SCORE : " + this.playerChar.score);
        // console.log("enemies in scene : " + this.scene.enemyCount);
     }
@@ -82,6 +81,9 @@ class mainGame extends Phaser.Scene
         let dKey;
         let fireSpcace;
         let inputKey;
+        let specialAttack;
+        let healSelf;
+        let healBoth;
 
         var laser;
         let maxScore; 
@@ -98,8 +100,9 @@ class mainGame extends Phaser.Scene
         let thirdWave;
         let ForthWave;
 
-        /* BUILDINGS */
-
+        /* PLAYER */
+        let lastFired;
+        let shotFreq;
        
 
         this.lasers = new Array();
@@ -133,6 +136,9 @@ class mainGame extends Phaser.Scene
         this.enemies = this.physics.add.group();
         this.enemies2 = new Array();
         this.physics.add.overlap(ground, this.enemies, this.enemyOutOfScreen, null, this);
+
+        this.lastFired = new Date().getTime();
+        this.shotFreq = 300;
     };
 
     enemyOutOfScreen(ground, enemy)
@@ -147,7 +153,6 @@ class mainGame extends Phaser.Scene
 
     update()
     { 
-
         if(this.aKey.isDown || this.dKey.isDown || this.inputKey.left.isDown || this.inputKey.right.isDown)
         {
             this.movePlayers();
@@ -160,23 +165,24 @@ class mainGame extends Phaser.Scene
         }
         if(this.fireSpcace.isDown)
         {          
-            var canLaser = new cannonLaser(this, player1.x, player1.y, 'laser', player1);
-             this.add.existing(canLaser);
-             this.lasers.push(canLaser);
-
-
-           
+            var currentTime = new Date().getTime();
+            if (currentTime - this.lastFired > this.shotFreq) {
+                var canLaser = new cannonLaser(this, player1.x, player1.y, 'laser', player1);
+                this.lastFired = currentTime;
+            }
         }
-        if(this.fire0.isDown)
-        {           
-           // console.log("fire");
-            var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2', player2);
-            this.add.existing(canLaser);
-            this.lasers.push(canLaser);           
+        if(this.inputKey.up.isDown)
+        {
+            var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2', player2);         
         }  
-        //this.scene.physics.add.collider(player2, this.enemies, this.handleHit, null, this);
+
+        if(this.specialAttack.isDown || this.healBoth.isDown || this.healSelf.isDown)
+        {
+            this.specials();
+        }
         
         this.checkPlayersScore();
+        
     }
 
     checkPlayersScore()
@@ -226,6 +232,24 @@ class mainGame extends Phaser.Scene
             console.log("Second set of enemies");
         }
 
+    }
+
+    specials()
+    {
+        if(this.specialAttack.isDown)
+        {
+            console.log("special attack");
+        }
+        else 
+        if(this.healSelf.isDown)
+        {
+            console.log("Health self");
+        }
+        else
+        if(this.healBoth.isDown)
+        {
+            console.log("Heal both");
+        }
     }
 
     movePlayers()
@@ -278,39 +302,45 @@ class mainGame extends Phaser.Scene
 
         this.anims.create
        ({
-        key: 'playerMoveLeft',
-        frames: [
-            { key: 'player1',frame:0 },
-        ],
-        frameRate: 24,
-        repeat: 0
-    });
+            key: 'playerMoveLeft',
+            frames: 
+            [
+                { key: 'player1',frame:0 },
+            ],
+            frameRate: 24,
+            repeat: 0
+        });
 
-    this.anims.create
-    ({
-     key: 'playerMoveRight',
-     frames: [
-         { key: 'player1',frame:2 },
-     ],
-     frameRate: 24,
-     repeat: 0
- });
+        this.anims.create
+            ({
+            key: 'playerMoveRight',
+            frames: 
+            [
+                { key: 'player1',frame:2 },
+            ],
+            frameRate: 24,
+            repeat: 0
+         });
 
- this.anims.create
- ({
-  key: 'playerStationary',
-  frames: [
-      { key: 'player1',frame:1 },
-  ],
-  frameRate: 24,
-  repeat: 0
-});
+        this.anims.create
+        ({
+            key: 'playerStationary',
+            frames: 
+            [
+                { key: 'player1',frame:1 },
+            ],
+            frameRate: 24,
+            repeat: 0
+        }); 
 
         this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
         this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.fireSpcace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.fire0 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO);
-        
+        this.specialAttack = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        this.healSelf = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+        this.healBoth = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
+
         return player;
     }
 
