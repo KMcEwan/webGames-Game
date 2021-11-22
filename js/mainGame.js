@@ -22,7 +22,7 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
 
     constructor(scene, xPos, yPos, key, playerKey)
     {
-        super(scene, xPos, yPos, key, playerKey);
+        super(scene, xPos, yPos, key);
         this.body = this.scene.physics.add.sprite(xPos, yPos, key)
         this.scene.physics.world.enable(this);
         this.body.setVelocityY(-500);        
