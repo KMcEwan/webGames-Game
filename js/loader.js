@@ -22,7 +22,7 @@ class loader extends Phaser.Scene
 
         /* SPRITE SHEETS OF SCENE PLAYERS*/
         this.load.spritesheet('enemy', '../assets/enemySheet.png', { frameWidth: 20, frameHeight: 20 });
-        this.load.spritesheet('player1', '../assets/pinkPlayerSheet.png', { frameWidth: 50, frameHeight: 50 });
+        this.load.spritesheet('player1', '../assets/pinkPlayerSheet.png', { frameWidth: 64, frameHeight: 64 });
 
         /* AUDIO - MUSIC */
         this.load.audio("titleMusic", '../assets/Audio/music/music1.mp3');

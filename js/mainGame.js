@@ -109,6 +109,7 @@ class mainGame extends Phaser.Scene
         this.add.image(400, 300, 'background');  
         player1 = this.createPlayer(200, 500, 'player1', player1);
         player2 = this.createPlayer(600, 500, 'player2', player2);
+        player1.setSize(50, 40, true);
         //console.log("player score", player1.score);
 
         // building1 = this.createBuilding(75, 700, 'building1', building1);
@@ -132,6 +133,14 @@ class mainGame extends Phaser.Scene
         this.physics.add.overlap(player2, this.enemies,  this.enemyHitPlayer, null, this);
         this.physics.add.overlap(player1, this.enemies,  this.enemyHitPlayer, null, this);
 
+
+        this.player1Image = this.add.image(20,20, 'player1');
+        this.player1Image.setScale(0.5)
+     
+        
+        this.playerOneScore = this.add.text (20, 10, 'score : 0', {font: '20px Arial', fill: '#df03fc'});
+        this.playerTwoScore = this.add.text (470, 10, 'score : 0', {font: '20px Arial', fill: '#df03fc'});
+
         this.lastFired = new Date().getTime();
         this.shotFreq = 300;
     };
@@ -152,6 +161,10 @@ class mainGame extends Phaser.Scene
     /* UPDATE FUNCTION START */
     update()
     { 
+
+        this.playerOneScore.setText('score : ' + player1.score);
+        this.playerTwoScore.setText('score : ' + player2.score);
+
         if(this.aKey.isDown || this.dKey.isDown || this.inputKey.left.isDown || this.inputKey.right.isDown)
         {
             this.movePlayers();
@@ -317,7 +330,7 @@ class mainGame extends Phaser.Scene
             key: 'playerMoveLeft',
             frames: 
             [
-                { key: 'player1',frame:0 },
+                { key: 'player1',frame:1 },
             ],
             frameRate: 24,
             repeat: 0
@@ -339,7 +352,37 @@ class mainGame extends Phaser.Scene
             key: 'playerStationary',
             frames: 
             [
-                { key: 'player1',frame:1 },
+                { key: 'player1',frame:0 },
+            ],
+            frameRate: 24,
+            repeat: 0
+        }); 
+        this.anims.create
+        ({
+            key: 'fireStationary',
+            frames: 
+            [
+                { key: 'player1',frame:3 },
+            ],
+            frameRate: 24,
+            repeat: 0
+        }); 
+        this.anims.create
+        ({
+            key: 'fireRight',
+            frames: 
+            [
+                { key: 'player1',frame:5 },
+            ],
+            frameRate: 24,
+            repeat: 0
+        }); 
+        this.anims.create
+        ({
+            key: 'fireLeft',
+            frames: 
+            [
+                { key: 'player1',frame:4 },
             ],
             frameRate: 24,
             repeat: 0
