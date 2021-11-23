@@ -110,6 +110,7 @@ class mainGame extends Phaser.Scene
         player1 = this.createPlayer(200, 500, 'player1', player1);
         player2 = this.createPlayer(600, 500, 'player2', player2);
         player1.setSize(50, 40, true);
+        player2.setSize(50, 40, true);
         //console.log("player score", player1.score);
 
         // building1 = this.createBuilding(75, 700, 'building1', building1);
