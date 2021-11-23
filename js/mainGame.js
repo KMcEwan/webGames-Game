@@ -10,7 +10,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         frames: [
             { key: 'enemy',frame:0 },
             { key: 'enemy',frame:1 },
-            { key: 'enemy',frame:2 },
         ],
         frameRate: 2,
         repeat: -1
@@ -111,8 +110,7 @@ class mainGame extends Phaser.Scene
         player2 = this.createPlayer(600, 500, 'player2', player2);
         player1.setSize(50, 40, true);
         player2.setSize(50, 40, true);
-        //console.log("player score", player1.score);
-
+       
         // building1 = this.createBuilding(75, 700, 'building1', building1);
         // building2 = this.createBuilding(225, 700, 'building2', building2);
         // building3 = this.createBuilding(375, 700, 'building3', building3);
@@ -135,12 +133,15 @@ class mainGame extends Phaser.Scene
         this.physics.add.overlap(player1, this.enemies,  this.enemyHitPlayer, null, this);
 
 
-        this.player1Image = this.add.image(20,20, 'player1');
+        this.player1Image = this.add.image(30,30, 'player1');
+        this.player1Image.setScale(0.5)
+
+        this.player1Image = this.add.image(455,30, 'player2');
         this.player1Image.setScale(0.5)
      
         
-        this.playerOneScore = this.add.text (20, 10, 'score : 0', {font: '20px Arial', fill: '#df03fc'});
-        this.playerTwoScore = this.add.text (470, 10, 'score : 0', {font: '20px Arial', fill: '#df03fc'});
+        this.playerOneScore = this.add.text (45, 20, 'score : 0', {font: '20px Arial', fill: '#df03fc'});
+        this.playerTwoScore = this.add.text (470, 20, 'score : 0', {font: '20px Arial', fill: '#df03fc'});
 
         this.lastFired = new Date().getTime();
         this.shotFreq = 300;
@@ -174,16 +175,40 @@ class mainGame extends Phaser.Scene
         {
             player1.setVelocityX(0);
             player2.setVelocityX(0);
-            player1.play('playerStationary');
+            player1.play('player1Stationary');
+            player2.play('player2Stationary');
         }
-        if(this.fireSpcace.isDown)
-        {          
+        if(this.fireSpcace.isDown && this.aKey.isDown)
+        {
             var currentTime = new Date().getTime();
             if (currentTime - this.lastFired > this.shotFreq) {
-                var canLaser = new cannonLaser(this, player1.x, player1.y, 'laser', player1);
+                var canLaser = new cannonLaser(this, player1.x, player1.y - 40, 'laser', player1);
                 this.lastFired = currentTime;
+               
             }
+            player1.play('fireLeft1');
         }
+        else if (this.fireSpcace.isDown && this.dKey.isDown)
+        {
+            var currentTime = new Date().getTime();
+            if (currentTime - this.lastFired > this.shotFreq) {
+                var canLaser = new cannonLaser(this, player1.x, player1.y - 40, 'laser', player1);
+                this.lastFired = currentTime;
+               
+            }
+            player1.play('fireRight1');
+        }
+        else if (this.fireSpcace.isDown)
+        {
+            var currentTime = new Date().getTime();
+            if (currentTime - this.lastFired > this.shotFreq) {
+                var canLaser = new cannonLaser(this, player1.x, player1.y - 40, 'laser', player1);
+                this.lastFired = currentTime;
+               
+            }
+            player1.play('fireStationary1');
+        }
+
         if(this.inputKey.up.isDown)
         {
             var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2', player2);         
@@ -293,13 +318,13 @@ class mainGame extends Phaser.Scene
         if(this.aKey.isDown)
         {
             player1.setVelocityX(-100);
-            player1.play('playerMoveLeft');
+            player1.play('player1MoveLeft');
         }
         else
         if(this.dKey.isDown)
         {
             player1.setVelocityX(100);
-            player1.play('playerMoveRight');
+            player1.play('player1MoveRight');
         }
     }
 
@@ -308,11 +333,13 @@ class mainGame extends Phaser.Scene
         if(this.inputKey.left.isDown)
         {
             player2.setVelocityX(-100);
+            player2.play('player2MoveLeft');
         }
         else
         if(this.inputKey.right.isDown)
         {
             player2.setVelocityX(100);
+            player2.play('player2MoveRight');
         }
     }
 
@@ -325,10 +352,10 @@ class mainGame extends Phaser.Scene
         player.score = 0; 
         player.setCollideWorldBounds(true); 
 
-
+        // PLAYER 1
         this.anims.create
        ({
-            key: 'playerMoveLeft',
+            key: 'player1MoveLeft',
             frames: 
             [
                 { key: 'player1',frame:1 },
@@ -339,7 +366,7 @@ class mainGame extends Phaser.Scene
 
         this.anims.create
             ({
-            key: 'playerMoveRight',
+            key: 'player1MoveRight',
             frames: 
             [
                 { key: 'player1',frame:2 },
@@ -350,7 +377,7 @@ class mainGame extends Phaser.Scene
 
         this.anims.create
         ({
-            key: 'playerStationary',
+            key: 'player1Stationary',
             frames: 
             [
                 { key: 'player1',frame:0 },
@@ -360,17 +387,17 @@ class mainGame extends Phaser.Scene
         }); 
         this.anims.create
         ({
-            key: 'fireStationary',
+            key: 'fireStationary1',
             frames: 
             [
                 { key: 'player1',frame:3 },
             ],
             frameRate: 24,
-            repeat: 0
+            repeat: 5
         }); 
         this.anims.create
         ({
-            key: 'fireRight',
+            key: 'fireRight1',
             frames: 
             [
                 { key: 'player1',frame:5 },
@@ -380,10 +407,74 @@ class mainGame extends Phaser.Scene
         }); 
         this.anims.create
         ({
-            key: 'fireLeft',
+            key: 'fireLeft1',
             frames: 
             [
                 { key: 'player1',frame:4 },
+            ],
+            frameRate: 24,
+            repeat: 0
+        }); 
+
+        //PLAYER 2
+        this.anims.create
+       ({
+            key: 'player2MoveLeft',
+            frames: 
+            [
+                { key: 'player2',frame:1 },
+            ],
+            frameRate: 24,
+            repeat: 0
+        });
+
+        this.anims.create
+            ({
+            key: 'player2MoveRight',
+            frames: 
+            [
+                { key: 'player2',frame:2 },
+            ],
+            frameRate: 24,
+            repeat: 0
+         });
+
+        this.anims.create
+        ({
+            key: 'player2Stationary',
+            frames: 
+            [
+                { key: 'player2',frame:0 },
+            ],
+            frameRate: 24,
+            repeat: 0
+        }); 
+        this.anims.create
+        ({
+            key: 'fireStationary2',
+            frames: 
+            [
+                { key: 'player2',frame:3 },
+            ],
+            frameRate: 24,
+            repeat: 0
+        }); 
+        this.anims.create
+        ({
+            key: 'fireRight2',
+            frames: 
+            [
+                { key: 'player2',frame:5 },
+            ],
+            frameRate: 24,
+            repeat: 0
+        }); 
+        this.anims.create
+        ({
+            key: 'fireLeft2',
+            frames: 
+            [
+                { key: 'player2',frame:4 },
             ],
             frameRate: 24,
             repeat: 0
