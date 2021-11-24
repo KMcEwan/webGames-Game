@@ -133,30 +133,47 @@ class mainGame extends Phaser.Scene
         this.physics.add.overlap(player1, this.enemies,  this.enemyHitPlayer, null, this);
 
 
-        this.player1Image = this.add.image(30,30, 'player1');
-        this.player1Image.setScale(0.5)
+        this.player1Image = this.add.image(135,40, 'player1');
+        this.player1Image.setScale(0.75)
 
-        this.player1Image = this.add.image(455,30, 'player2');
-        this.player1Image.setScale(0.5)
+        this.player1Image = this.add.image(425,40, 'player2');
+        this.player1Image.setScale(0.75)
      
         
-        this.playerOneScore = this.add.text (45, 20, 'score : 0', {font: '20px Arial', fill: '#df03fc'});
-        this.playerTwoScore = this.add.text (470, 20, 'score : 0', {font: '20px Arial', fill: '#df03fc'});
+        this.playerOneScore = this.add.text (15,55, 'score : 0', {font: '20px Arial', fill: '#df03fc',  backgroundColor: '#000000'});
+        this.playerTwoScore = this.add.text (460, 55, 'score : 0', {font: '20px Arial', fill: '#0000FF',  backgroundColor: '#000000'});
 
 
         this.graphicsPlayerOneHealth = this.add.graphics();
         this.graphicsPlayerTwoHealth = this.add.graphics();
-        // this.width = 200;
-        // this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
-        // this.graphics.clear();
-        
-        // this.graphics.fillStyle(0x808080);
-        // this.graphics.fillRoundedRect(10, 10, this.width, 20, 5);
-        // this.graphics.fillStyle(0x00ff00);
-        // this.graphics.fillRoundedRect(10,10, this.width * this.percent, 20, 5);
 
         this.setHealthbarPlayerOne();
         this.setHealthbarPlayerTwo();
+
+        this.player1Hearts = this.add.group({classType : Phaser.GameObjects.Image});
+        this.player1Hearts.createMultiple
+        ({
+            key: 'heartFull',
+            setXY: {
+                x: 25,
+                y: 20,
+                stepX: 30
+            },
+            quantity: 3
+        });
+
+        this.player2Hearts = this.add.group({classType : Phaser.GameObjects.Image});
+        this.player2Hearts.createMultiple
+        ({
+            key: 'heartFull',
+            setXY: {
+                x: 470,
+                y: 20,
+                stepX: 30
+            },
+            quantity: 3
+        });
+
 
 
         this.lastFired = new Date().getTime();
@@ -165,42 +182,45 @@ class mainGame extends Phaser.Scene
 
     setHealthbarPlayerOne()
     {
-        // this.width = 100;
-        // this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
-        // this.graphicsPlayerOneHealth.clear();
-        // this.graphicsPlayerOneHealth.fillStyle(0x808080);
-        // this.graphicsPlayerOneHealth.fillRoundedRect(10, 10, this.width, 10, 5);
- 
-        // if(this.percent > 0)
-        // {
-        //  this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
-        //  this.graphicsPlayerOneHealth.fillRoundedRect(10,10, this.width * this.percent, 10, 5);
-  
-        // }
-
         this.width = 100;
         this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
         this.graphicsPlayerOneHealth.clear();
         this.graphicsPlayerOneHealth.fillStyle(0x808080);
-        this.graphicsPlayerOneHealth.fillRoundedRect(10, 10, this.width, 10, 5);
+        this.graphicsPlayerOneHealth.fillRoundedRect(5, 40, this.width, 10, 5);
         console.log("player lives : " , player1.lives);
  
         if(this.percent >= .1)
         {
 
             this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
-            this.graphicsPlayerOneHealth.fillRoundedRect(10,10, this.width * this.percent, 10, 5);  
+            this.graphicsPlayerOneHealth.fillRoundedRect(5,40, this.width * this.percent, 10, 5);  
         }
         else
         {
             player1.lives --;
+            
+            this.player1Hearts.children.each((go, idx) =>           
+            {
+                this.player1Heart = go;
+                if(idx < player1.lives)
+                {
+                    this.player1Heart.setTexture('heartFull') ;
+                }
+                else
+                {
+                    this.player1Heart.setTexture('heartEmpty') ;
+                }
+                
+            } )
+          
+
             if(player1.lives > 0)
             {
                 player1.health = 100;                
                 this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
                 console.log("player lives : " , player1.lives);
-                this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
-                this.graphicsPlayerOneHealth.fillRoundedRect(10,10, this.width * this.percent, 10, 5);  
+                // this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
+                // this.graphicsPlayerOneHealth.fillRoundedRect(10,40, this.width * this.percent, 10, 5);  
             }
             else
             {
@@ -218,25 +238,26 @@ class mainGame extends Phaser.Scene
         this.percent = Phaser.Math.Clamp(player2.health, 0, 100) / 100;
         this.graphicsPlayerTwoHealth.clear();
         this.graphicsPlayerTwoHealth.fillStyle(0x808080);
-        this.graphicsPlayerTwoHealth.fillRoundedRect(470, 10, this.width, 10, 5);
+        this.graphicsPlayerTwoHealth.fillRoundedRect(455, 40, this.width, 10, 5);
         console.log("player lives : " , player2.lives);
  
         if(this.percent >= .1)
         {
 
             this.graphicsPlayerTwoHealth.fillStyle(0x00ff00);
-            this.graphicsPlayerTwoHealth.fillRoundedRect(470,10, this.width * this.percent, 10, 5);  
+            this.graphicsPlayerTwoHealth.fillRoundedRect(455,40, this.width * this.percent, 10, 5);  
         }
         else
         {
             player2.lives --;
+     
             if(player2.lives > 0)
             {
                 player2.health = 100;                
                 this.percent = Phaser.Math.Clamp(player2.health, 0, 100) / 100;
                 console.log("player lives : " , player2.lives);
-                this.graphicsPlayerTwoHealth.fillStyle(0x00ff00);
-                this.graphicsPlayerTwoHealth.fillRoundedRect(470,10, this.width * this.percent, 10, 5);  
+                // this.graphicsPlayerTwoHealth.fillStyle(0x00ff00);
+                // this.graphicsPlayerTwoHealth.fillRoundedRect(470,10, this.width * this.percent, 10, 5);  
             }
             else
             {
@@ -425,13 +446,13 @@ class mainGame extends Phaser.Scene
     {
         if(this.aKey.isDown)
         {
-            player1.setVelocityX(-100);
+            player1.setVelocityX(-300);
             player1.play('player1MoveLeft');
         }
         else
         if(this.dKey.isDown)
         {
-            player1.setVelocityX(100);
+            player1.setVelocityX(300);
             player1.play('player1MoveRight');
         }
     }
