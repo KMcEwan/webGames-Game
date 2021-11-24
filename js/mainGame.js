@@ -143,20 +143,128 @@ class mainGame extends Phaser.Scene
         this.playerOneScore = this.add.text (45, 20, 'score : 0', {font: '20px Arial', fill: '#df03fc'});
         this.playerTwoScore = this.add.text (470, 20, 'score : 0', {font: '20px Arial', fill: '#df03fc'});
 
+
+        this.graphicsPlayerOneHealth = this.add.graphics();
+        this.graphicsPlayerTwoHealth = this.add.graphics();
+        // this.width = 200;
+        // this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
+        // this.graphics.clear();
+        
+        // this.graphics.fillStyle(0x808080);
+        // this.graphics.fillRoundedRect(10, 10, this.width, 20, 5);
+        // this.graphics.fillStyle(0x00ff00);
+        // this.graphics.fillRoundedRect(10,10, this.width * this.percent, 20, 5);
+
+        this.setHealthbarPlayerOne();
+        this.setHealthbarPlayerTwo();
+
+
         this.lastFired = new Date().getTime();
         this.shotFreq = 300;
     };
 
+    setHealthbarPlayerOne()
+    {
+        // this.width = 100;
+        // this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
+        // this.graphicsPlayerOneHealth.clear();
+        // this.graphicsPlayerOneHealth.fillStyle(0x808080);
+        // this.graphicsPlayerOneHealth.fillRoundedRect(10, 10, this.width, 10, 5);
+ 
+        // if(this.percent > 0)
+        // {
+        //  this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
+        //  this.graphicsPlayerOneHealth.fillRoundedRect(10,10, this.width * this.percent, 10, 5);
+  
+        // }
+
+        this.width = 100;
+        this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
+        this.graphicsPlayerOneHealth.clear();
+        this.graphicsPlayerOneHealth.fillStyle(0x808080);
+        this.graphicsPlayerOneHealth.fillRoundedRect(10, 10, this.width, 10, 5);
+        console.log("player lives : " , player1.lives);
+ 
+        if(this.percent >= .1)
+        {
+
+            this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
+            this.graphicsPlayerOneHealth.fillRoundedRect(10,10, this.width * this.percent, 10, 5);  
+        }
+        else
+        {
+            player1.lives --;
+            if(player1.lives > 0)
+            {
+                player1.health = 100;                
+                this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
+                console.log("player lives : " , player1.lives);
+                this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
+                this.graphicsPlayerOneHealth.fillRoundedRect(10,10, this.width * this.percent, 10, 5);  
+            }
+            else
+            {
+                this.scene.start("gameOverKey");
+                this.game.sound.stopAll();
+            }
+        }
+    }
+
+
+    
+    setHealthbarPlayerTwo()
+    {
+        this.width = 100;
+        this.percent = Phaser.Math.Clamp(player2.health, 0, 100) / 100;
+        this.graphicsPlayerTwoHealth.clear();
+        this.graphicsPlayerTwoHealth.fillStyle(0x808080);
+        this.graphicsPlayerTwoHealth.fillRoundedRect(470, 10, this.width, 10, 5);
+        console.log("player lives : " , player2.lives);
+ 
+        if(this.percent >= .1)
+        {
+
+            this.graphicsPlayerTwoHealth.fillStyle(0x00ff00);
+            this.graphicsPlayerTwoHealth.fillRoundedRect(470,10, this.width * this.percent, 10, 5);  
+        }
+        else
+        {
+            player2.lives --;
+            if(player2.lives > 0)
+            {
+                player2.health = 100;                
+                this.percent = Phaser.Math.Clamp(player2.health, 0, 100) / 100;
+                console.log("player lives : " , player2.lives);
+                this.graphicsPlayerTwoHealth.fillStyle(0x00ff00);
+                this.graphicsPlayerTwoHealth.fillRoundedRect(470,10, this.width * this.percent, 10, 5);  
+            }
+            else
+            {
+                this.scene.start("gameOverKey");
+                this.game.sound.stopAll();
+            }
+        }
+    }
 
 
     enemyHitPlayer(player, enemy) 
     {      
-       //console.log("enemy hit");
-       player.health -= 10;
-       enemy.destroy(true);      
-       this.scene.enemyCount--;  
-     // console.log("PLAYER HEALTH : " + player.health);
-      // console.log("player score :" + player.score);
+
+        player.health -= 10;
+        this.enemyCount--;
+        enemy.destroy(true);      
+        if(player == player1)
+        {
+            this.setHealthbarPlayerOne();
+        }   
+        else
+        if(player == player2)
+        {
+            this.setHealthbarPlayerTwo();
+        }          
+      
+
+ 
     }
 
 

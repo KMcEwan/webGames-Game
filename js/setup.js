@@ -12,7 +12,7 @@ var config =
         // height: 800
     },
 
-    scene: [loader, mainMenu, controls, mainGame],
+    scene: [loader, mainMenu, controls, mainGame, gameOver],
 
     physics:
     {
