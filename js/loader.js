@@ -34,6 +34,11 @@ class loader extends Phaser.Scene
         /* BUTTONS */
         this.load.image('startButton', '../assets/UI/startButton.png');
         this.load.image('controlButton', '../assets/UI/controlButton.png');
+
+        this.load.text('font', '../assets/fonts/AstroSpace.ttf');
+
+
+
     };
 
     create()

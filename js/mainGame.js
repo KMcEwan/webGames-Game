@@ -219,8 +219,8 @@ class mainGame extends Phaser.Scene
                 player1.health = 100;                
                 this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
                 console.log("player lives : " , player1.lives);
-                // this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
-                // this.graphicsPlayerOneHealth.fillRoundedRect(10,40, this.width * this.percent, 10, 5);  
+                this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
+                this.graphicsPlayerOneHealth.fillRoundedRect(5,40, this.width * this.percent, 10, 5);  
             }
             else
             {
@@ -250,14 +250,27 @@ class mainGame extends Phaser.Scene
         else
         {
             player2.lives --;
+            this.player2Hearts.children.each((go, idx) =>           
+            {
+                this.player2Heart = go;
+                if(idx < player2.lives)
+                {
+                    this.player2Heart.setTexture('heartFull') ;
+                }
+                else
+                {
+                    this.player2Heart.setTexture('heartEmpty') ;
+                }
+                
+            } )
      
             if(player2.lives > 0)
             {
                 player2.health = 100;                
                 this.percent = Phaser.Math.Clamp(player2.health, 0, 100) / 100;
                 console.log("player lives : " , player2.lives);
-                // this.graphicsPlayerTwoHealth.fillStyle(0x00ff00);
-                // this.graphicsPlayerTwoHealth.fillRoundedRect(470,10, this.width * this.percent, 10, 5);  
+                this.graphicsPlayerTwoHealth.fillStyle(0x00ff00);
+                this.graphicsPlayerTwoHealth.fillRoundedRect(455,40, this.width * this.percent, 10, 5);  
             }
             else
             {
