@@ -84,11 +84,6 @@ class mainGame extends Phaser.Scene
         let enemyCount;
         let enemiesInScene;
 
-        /* ENEMY SPAWN */
-        let firstWave;
-        let secondWave;
-        let thirdWave;
-        let ForthWave;
 
         /* PLAYER */
         let lastFired;
@@ -102,6 +97,12 @@ class mainGame extends Phaser.Scene
 
     create()
     {
+
+        this.scoreForHealSelf = 200;
+        this.scoreForHealBoth = 300;
+        this.specialAbility = 300;
+        
+        this.playerVelocity = 200;
         
        
         this.inputKey = this.input.keyboard.createCursorKeys(); 
@@ -140,8 +141,8 @@ class mainGame extends Phaser.Scene
         this.player1Image.setScale(0.75)
      
         
-        this.playerOneScore = this.add.text (15,55, 'score : 0', {font: '20px Arial', fill: '#df03fc',  backgroundColor: '#000000'});
-        this.playerTwoScore = this.add.text (460, 55, 'score : 0', {font: '20px Arial', fill: '#0000FF',  backgroundColor: '#000000'});
+        this.playerOneScore = this.add.text (5,55, 'score : 0', { fontFamily: 'CustomFont', fill: '#df03fc'});
+        this.playerTwoScore = this.add.text (460, 55, 'score : 0', {fontFamily: 'CustomFont', fill: '#0000FF'});
 
 
         this.graphicsPlayerOneHealth = this.add.graphics();
@@ -296,9 +297,6 @@ class mainGame extends Phaser.Scene
         {
             this.setHealthbarPlayerTwo();
         }          
-      
-
- 
     }
 
 
@@ -358,7 +356,7 @@ class mainGame extends Phaser.Scene
 
         if(this.specialAttack.isDown || this.healBoth.isDown || this.healSelf.isDown)
         {
-            this.specials();
+            this.specialsPlayer1();
             console.log("player 1 score ", player1.score);
             console.log("player 2 score ", player2.score);
         }
@@ -390,7 +388,7 @@ class mainGame extends Phaser.Scene
             this.maxScore = player2.score;
         }
 
-        if(this.maxScore < 300)
+        if(this.maxScore > 0)
         {
             //console.log("ENEMIES ALIVE : "+ this.enemyCount);
             this.enemiesInScene = this.firstWave - this.enemyCount;         
@@ -427,7 +425,7 @@ class mainGame extends Phaser.Scene
 
     }
 
-    specials()
+    specialsPlayer1()
     {
         if(Phaser.Input.Keyboard.JustDown(this.specialAttack))
         {
@@ -436,12 +434,25 @@ class mainGame extends Phaser.Scene
         else 
         if(Phaser.Input.Keyboard.JustDown(this.healSelf))
         {
-            console.log("Heal self");
+            if(player1.score >= this.scoreForHealSelf)
+            {
+                player1.health = 100;
+                player1.score -= 200;
+                this.setHealthbarPlayerOne();
+                this.setHealthbarPlayerTwo();
+            }     
         }
         else
         if(Phaser.Input.Keyboard.JustDown(this.healBoth))
         {
-            console.log("Heal both");
+            if(player1.score >= this.scoreForHealBoth)
+            {
+                player1.health = 100;
+                player2.health = 100;
+                player1.score -= 300;
+                this.setHealthbarPlayerOne();
+                this.setHealthbarPlayerTwo();
+            }
         }
     }
 
@@ -459,13 +470,13 @@ class mainGame extends Phaser.Scene
     {
         if(this.aKey.isDown)
         {
-            player1.setVelocityX(-300);
+            player1.setVelocityX(-this.playerVelocity);
             player1.play('player1MoveLeft');
         }
         else
         if(this.dKey.isDown)
         {
-            player1.setVelocityX(300);
+            player1.setVelocityX(this.playerVelocity);
             player1.play('player1MoveRight');
         }
     }
@@ -474,13 +485,13 @@ class mainGame extends Phaser.Scene
     {
         if(this.inputKey.left.isDown)
         {
-            player2.setVelocityX(-100);
+            player2.setVelocityX(-this.playerVelocity);
             player2.play('player2MoveLeft');
         }
         else
         if(this.inputKey.right.isDown)
         {
-            player2.setVelocityX(100);
+            player2.setVelocityX(this.playerVelocity);
             player2.play('player2MoveRight');
         }
     }
@@ -491,7 +502,7 @@ class mainGame extends Phaser.Scene
         player.health = 100;
         player.lives = 3; 
         player.isAlive = true;
-        player.score = 0; 
+        player.score = 1000; 
         player.setCollideWorldBounds(true); 
 
         // PLAYER 1
