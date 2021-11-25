@@ -66,28 +66,28 @@ class mainGame extends Phaser.Scene
     constructor ()
     {
         super({key: "gameKey"});
-        /* KEY INPUTS */
-        let aKey;
-        let dKey;
-        let fireSpcace;
-        let inputKey;
-        let specialAbility;
-        let healSelf;
-        let healBoth;
+        // /* KEY INPUTS */
+        // let aKey;
+        // let dKey;
+        // let fireSpcace;
+        // let inputKey;
+        // let specialAbility;
+        // let healSelf;
+        // let healBoth;
 
-        var laser;
-        let maxScore; 
+        // var laser;
+        // let maxScore; 
         
-        /*ENEMY */
-        let enemy;
-        let enemies;
-        let enemyCount;
-        let enemiesInScene;
+        // /*ENEMY */
+        // let enemy;
+        // let enemies;
+        // let enemyCount;
+        // let enemiesInScene;
 
 
-        /* PLAYER */
-        let lastFired;
-        let shotFreq;
+        // /* PLAYER */
+        // let lastFired;
+        // let shotFreq;
        
 
         this.lasers = new Array();
@@ -102,6 +102,7 @@ class mainGame extends Phaser.Scene
         this.scoreForHealBoth = 300;
         this.specialAbility1 = 300;
         this.gainLives = 1000;
+        this.specialAttack = 1000;
         this.playerVelocity = 200;
         
        
@@ -374,8 +375,11 @@ class mainGame extends Phaser.Scene
         if(this.specialAbility1.isDown || this.healBoth.isDown || this.healSelf.isDown)
         {
             this.specialsPlayer1();
-            console.log("player 1 score ", player1.score);
-            console.log("player 2 score ", player2.score);
+        }
+
+        if(this.specialAbility2.isDown || this.healBoth2.isDown || this.healSelf2.isDown)
+        {
+            this.SpecialsPlayer2();
         }
         
         
@@ -480,9 +484,41 @@ class mainGame extends Phaser.Scene
         }
     }
 
-    player2Specials()
+    SpecialsPlayer2()
     {
-
+        if(Phaser.Input.Keyboard.JustDown(this.specialAbility2))
+        {
+            console.log("special attack");
+            if(player2.score >= this.specialAttack)
+            {
+                this.DefenceLaser = this.createDefenceLaser(300, 800, 'laserDefence', this.DefenceLaser);
+                player2.score -= this.specialAttack;
+            }
+         
+        }
+        else 
+        if(Phaser.Input.Keyboard.JustDown(this.healSelf2))
+        {
+            if(player2.score >= this.scoreForHealSelf)
+            {
+                player2.health = 100;
+                player2.score -= this.scoreForHealSelf;
+                this.setHealthbarPlayerOne();
+                this.setHealthbarPlayerTwo();
+            }     
+        }
+        else
+        if(Phaser.Input.Keyboard.JustDown(this.healBoth2))
+        {
+            if(player2.score >= this.scoreForHealBoth)
+            {
+                player1.health = 100;
+                player2.health = 100;
+                player2.score -= this.scoreForHealBoth;
+                this.setHealthbarPlayerOne();
+                this.setHealthbarPlayerTwo();
+            }
+        }
     }
 
     movePlayers()
@@ -670,7 +706,9 @@ class mainGame extends Phaser.Scene
         this.healBoth = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
 
-        this.specialAbility2 = this.input.keyboard.addKey
+        this.specialAbility2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE);
+        this.healSelf2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO);
+        this.healBoth2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE);
 
         return player;
     }
