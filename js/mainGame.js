@@ -71,7 +71,7 @@ class mainGame extends Phaser.Scene
         let dKey;
         let fireSpcace;
         let inputKey;
-        let specialAttack;
+        let specialAbility;
         let healSelf;
         let healBoth;
 
@@ -101,7 +101,7 @@ class mainGame extends Phaser.Scene
         this.scoreForHealSelf = 200;
         this.scoreForHealBoth = 300;
         this.specialAbility = 300;
-        
+        this.gainLives = 1000;
         this.playerVelocity = 200;
         
        
@@ -193,14 +193,43 @@ class mainGame extends Phaser.Scene
         if(this.percent >= .1)
         {
 
-            this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
-            this.graphicsPlayerOneHealth.fillRoundedRect(5,40, this.width * this.percent, 10, 5);  
+            // this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
+            // this.graphicsPlayerOneHealth.fillRoundedRect(5,40, this.width * this.percent, 10, 5);  
+            this.drawPlayer2Health();
         }
         else
         {
             player1.lives --;
             
-            this.player1Hearts.children.each((go, idx) =>           
+            this.setPlayers1Lives();
+          
+
+            if(player1.lives > 0)
+            {
+                player1.health = 100;                
+                this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
+                console.log("player lives : " , player1.lives);
+                // this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
+                // this.graphicsPlayerOneHealth.fillRoundedRect(5,40, this.width * this.percent, 10, 5);  
+                this.drawPlayer2Health();
+            }
+            else
+            {
+                this.scene.start("gameOverKey");
+                this.game.sound.stopAll();
+            }
+        }
+    }
+
+    drawPlayer2Health()
+    {
+        this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
+        this.graphicsPlayerOneHealth.fillRoundedRect(5,40, this.width * this.percent, 10, 5);  
+    }
+
+    setPlayers1Lives()
+    {
+        this.player1Hearts.children.each((go, idx) =>           
             {
                 this.player1Heart = go;
                 if(idx < player1.lives)
@@ -213,22 +242,6 @@ class mainGame extends Phaser.Scene
                 }
                 
             } )
-          
-
-            if(player1.lives > 0)
-            {
-                player1.health = 100;                
-                this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
-                console.log("player lives : " , player1.lives);
-                this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
-                this.graphicsPlayerOneHealth.fillRoundedRect(5,40, this.width * this.percent, 10, 5);  
-            }
-            else
-            {
-                this.scene.start("gameOverKey");
-                this.game.sound.stopAll();
-            }
-        }
     }
 
 
@@ -244,34 +257,19 @@ class mainGame extends Phaser.Scene
  
         if(this.percent >= .1)
         {
-
-            this.graphicsPlayerTwoHealth.fillStyle(0x00ff00);
-            this.graphicsPlayerTwoHealth.fillRoundedRect(455,40, this.width * this.percent, 10, 5);  
+            this.drawPlayer2Health();
         }
         else
         {
             player2.lives --;
-            this.player2Hearts.children.each((go, idx) =>           
-            {
-                this.player2Heart = go;
-                if(idx < player2.lives)
-                {
-                    this.player2Heart.setTexture('heartFull') ;
-                }
-                else
-                {
-                    this.player2Heart.setTexture('heartEmpty') ;
-                }
-                
-            } )
+            this.setPlayers2Lives();
      
             if(player2.lives > 0)
             {
                 player2.health = 100;                
                 this.percent = Phaser.Math.Clamp(player2.health, 0, 100) / 100;
                 console.log("player lives : " , player2.lives);
-                this.graphicsPlayerTwoHealth.fillStyle(0x00ff00);
-                this.graphicsPlayerTwoHealth.fillRoundedRect(455,40, this.width * this.percent, 10, 5);  
+                this.drawPlayer2Health();
             }
             else
             {
@@ -279,6 +277,29 @@ class mainGame extends Phaser.Scene
                 this.game.sound.stopAll();
             }
         }
+    }
+
+    drawPlayer2Health()
+    {
+        this.graphicsPlayerTwoHealth.fillStyle(0x00ff00);
+        this.graphicsPlayerTwoHealth.fillRoundedRect(455,40, this.width * this.percent, 10, 5);  
+    }
+
+    setPlayers2Lives()
+    {
+        this.player2Hearts.children.each((go, idx) =>           
+        {
+            this.player2Heart = go;
+            if(idx < player2.lives)
+            {
+                this.player2Heart.setTexture('heartFull') ;
+            }
+            else
+            {
+                this.player2Heart.setTexture('heartEmpty') ;
+            }
+            
+        } )
     }
 
 
@@ -354,7 +375,7 @@ class mainGame extends Phaser.Scene
             var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2', player2);         
         }  
 
-        if(this.specialAttack.isDown || this.healBoth.isDown || this.healSelf.isDown)
+        if(this.specialAbility.isDown || this.healBoth.isDown || this.healSelf.isDown)
         {
             this.specialsPlayer1();
             console.log("player 1 score ", player1.score);
@@ -427,9 +448,22 @@ class mainGame extends Phaser.Scene
 
     specialsPlayer1()
     {
-        if(Phaser.Input.Keyboard.JustDown(this.specialAttack))
+        if(Phaser.Input.Keyboard.JustDown(this.specialAbility))
         {
-            console.log("special attack");
+            if(player1.score >= this.gainLives)
+            {
+                if(player1.lives < 3)
+                {
+                    player1.lives++;
+                }
+                if(player2.lives < 3)
+                {
+                    player2.lives++;
+                }
+                player1.score -= 1000;
+                this.setPlayers1Lives();
+                this.setPlayers2Lives();
+            }
         }
         else 
         if(Phaser.Input.Keyboard.JustDown(this.healSelf))
@@ -637,7 +671,7 @@ class mainGame extends Phaser.Scene
         this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.fireSpcace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.fire0 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO);
-        this.specialAttack = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        this.specialAbility = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         this.healSelf = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         this.healBoth = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
 
