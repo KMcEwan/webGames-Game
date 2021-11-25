@@ -13,9 +13,10 @@ class controls extends Phaser.Scene
     create()
     {
         this.add.image(400, 300, 'background');  
-        console.log("controls script");
+        this.add.image(config.width / 2, config.height / 2 - 100, 'controls');
+    
 
-        const startButton = this.add.image(config.width / 2, config.height / 2 - 100, 'startButton');
+        const startButton = this.add.image(config.width / 2, config.height / 2 + 300, 'startButton');
         startButton.setInteractive();
 
         startButton.on('pointerdown', () => 

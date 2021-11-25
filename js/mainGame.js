@@ -14,6 +14,20 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
         frameRate: 2,
         repeat: -1
     });
+
+    this.anims.create
+    ({
+     key: 'destroyEnemy',
+     frames: [
+         { key: 'enemy',frame:2 },
+         { key: 'enemy',frame:3 },
+         { key: 'enemy',frame:4 },
+         { key: 'enemy',frame:5 },
+     ],
+     frameRate: 2,
+     repeat: -1
+ });
+
     }
 }
 
@@ -42,10 +56,22 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
 
     bulletHitEnemy(laser, enemy)
     {     
+
+        enemy.play('destroyEnemy', false)
+        enemy.once('animationcomplete', ()=> 
+        {
+            console.log("anmiation complete");
+            enemy.destroy();
+        }
+        )
+
+
+       // enemy.play('destroyEnemy');
         laser.destroy(true);
-        enemy.destroy(true);       
+           
         this.scene.enemyCount--;
         this.player.score += 10;
+       // enemy.destroy(true);    
     }
 
 
@@ -66,32 +92,7 @@ class mainGame extends Phaser.Scene
     constructor ()
     {
         super({key: "gameKey"});
-        // /* KEY INPUTS */
-        // let aKey;
-        // let dKey;
-        // let fireSpcace;
-        // let inputKey;
-        // let specialAbility;
-        // let healSelf;
-        // let healBoth;
-
-        // var laser;
-        // let maxScore; 
-        
-        // /*ENEMY */
-        // let enemy;
-        // let enemies;
-        // let enemyCount;
-        // let enemiesInScene;
-
-
-        // /* PLAYER */
-        // let lastFired;
-        // let shotFreq;
-       
-
-        this.lasers = new Array();
-        
+        this.lasers = new Array();        
     }
 
 
@@ -305,6 +306,7 @@ class mainGame extends Phaser.Scene
 
         player.health -= 10;
         this.enemyCount--;
+        enemy.play('destroyEnemy');
         enemy.destroy(true);      
         if(player == player1)
         {
@@ -391,7 +393,8 @@ class mainGame extends Phaser.Scene
 
     enemyOutOfScreen(ground, enemy)
     {
-        enemy.destroy(true);
+        enemy.play('destroyEnemy')
+        enemy.destroy(true);        
         this.enemyCount--;
     }
 
@@ -741,6 +744,7 @@ class mainGame extends Phaser.Scene
     defenceLaserEnemy(defence, enemies)
     {
         enemies.destroy(true);
+        enemies.play('destroyEnemy');
         this.enemyCount--;
     }
 }

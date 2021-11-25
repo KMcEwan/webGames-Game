@@ -24,7 +24,7 @@ class loader extends Phaser.Scene
 
 
         /* SPRITE SHEETS OF SCENE PLAYERS*/
-        this.load.spritesheet('enemy', '../assets/enemy/enemySheet.png', { frameWidth: 20, frameHeight: 20 });
+        this.load.spritesheet('enemy', '../assets/enemy/enemySheetTest.png', { frameWidth: 20, frameHeight: 20 });
         this.load.spritesheet('player1', '../assets/playerAssets/pinkPlayerSheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player2', '../assets/playerAssets/bluePlayerSheet.png', { frameWidth: 64, frameHeight: 64 });
 
@@ -35,6 +35,8 @@ class loader extends Phaser.Scene
         /* BUTTONS */
         this.load.image('startButton', '../assets/UI/startButton.png');
         this.load.image('controlButton', '../assets/UI/controlButton.png');
+
+        this.load.image('controls', '../assets/UI/controls.png');
 
         this.load.text('font', '../assets/fonts/AstroSpace.ttf');
 
