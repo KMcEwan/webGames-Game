@@ -20,6 +20,7 @@ class loader extends Phaser.Scene
         this.load.image('ground', '../assets/environment/ground2.png');
         this.load.image('heartFull', '../assets/UI/fullHeart.png');
         this.load.image('heartEmpty', '../assets/UI/emptyHeart.png');
+        this.load.image('laserDefence', '../assets/playerAssets/laserDefenceBeam.png');
 
 
         /* SPRITE SHEETS OF SCENE PLAYERS*/

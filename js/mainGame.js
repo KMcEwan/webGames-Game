@@ -3,7 +3,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
     constructor(scene, x, y, key)
     {
        super(scene, x, y, key);                                                     // Super calls parent class which is Phaser.Physics.Arcade.Sprite
-       //this.scene.physics.world.enable(this);
+       this.setScale(1.4);
        this.anims.create
        ({
         key: 'flash',
@@ -100,7 +100,7 @@ class mainGame extends Phaser.Scene
 
         this.scoreForHealSelf = 200;
         this.scoreForHealBoth = 300;
-        this.specialAbility = 300;
+        this.specialAbility1 = 300;
         this.gainLives = 1000;
         this.playerVelocity = 200;
         
@@ -132,6 +132,7 @@ class mainGame extends Phaser.Scene
         this.physics.add.overlap(ground, this.enemies, this.enemyOutOfScreen, null, this);
         this.physics.add.overlap(player2, this.enemies,  this.enemyHitPlayer, null, this);
         this.physics.add.overlap(player1, this.enemies,  this.enemyHitPlayer, null, this);
+        
 
 
         this.player1Image = this.add.image(135,40, 'player1');
@@ -192,10 +193,7 @@ class mainGame extends Phaser.Scene
  
         if(this.percent >= .1)
         {
-
-            // this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
-            // this.graphicsPlayerOneHealth.fillRoundedRect(5,40, this.width * this.percent, 10, 5);  
-            this.drawPlayer2Health();
+            this.drawPlayer1Health();
         }
         else
         {
@@ -209,9 +207,7 @@ class mainGame extends Phaser.Scene
                 player1.health = 100;                
                 this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
                 console.log("player lives : " , player1.lives);
-                // this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
-                // this.graphicsPlayerOneHealth.fillRoundedRect(5,40, this.width * this.percent, 10, 5);  
-                this.drawPlayer2Health();
+                this.drawPlayer1Health();
             }
             else
             {
@@ -221,7 +217,7 @@ class mainGame extends Phaser.Scene
         }
     }
 
-    drawPlayer2Health()
+    drawPlayer1Health()
     {
         this.graphicsPlayerOneHealth.fillStyle(0x00ff00);
         this.graphicsPlayerOneHealth.fillRoundedRect(5,40, this.width * this.percent, 10, 5);  
@@ -375,7 +371,7 @@ class mainGame extends Phaser.Scene
             var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2', player2);         
         }  
 
-        if(this.specialAbility.isDown || this.healBoth.isDown || this.healSelf.isDown)
+        if(this.specialAbility1.isDown || this.healBoth.isDown || this.healSelf.isDown)
         {
             this.specialsPlayer1();
             console.log("player 1 score ", player1.score);
@@ -411,26 +407,19 @@ class mainGame extends Phaser.Scene
 
         if(this.maxScore > 0)
         {
-            //console.log("ENEMIES ALIVE : "+ this.enemyCount);
             this.enemiesInScene = this.firstWave - this.enemyCount;         
-           // console.log("ENEMIES IN SCENE :" + this.enemiesInScene);            
 
             for (let k = 0; k < this.enemiesInScene; k++) 
             {
-                //console.log("ENEMIES ALIVE : "+ this.enemyCount);
-                let x = Phaser.Math.Between(590, 10);   
+                let x = Phaser.Math.Between(580, 20);   
                 let vel = Phaser.Math.Between(300, 10);   
-               // console.log("velocity : ", vel);    
                 this.enemy = new Enemy(this, x, 0, 'enemy');
                 this.enemy.play('flash');
                 this.add.existing(this.enemy);
                 this.enemies.add(this.enemy);
-                //this.enemies.setVelocityY(vel);
                 this.enemy.setVelocityY(vel);
                 this.enemies2.push(this.enemy);
                 this.enemyCount++;
-               // console.log("ENEMIES TO BE SPAWNED : " + this.enemiesInScene);
-               // console.log("COUNT OF ENEMIES : " + this.enemyCount);
             }
         }
         else
@@ -448,7 +437,7 @@ class mainGame extends Phaser.Scene
 
     specialsPlayer1()
     {
-        if(Phaser.Input.Keyboard.JustDown(this.specialAbility))
+        if(Phaser.Input.Keyboard.JustDown(this.specialAbility1))
         {
             if(player1.score >= this.gainLives)
             {
@@ -464,6 +453,7 @@ class mainGame extends Phaser.Scene
                 this.setPlayers1Lives();
                 this.setPlayers2Lives();
             }
+          //  this.DefenceLaser = this.createDefenceLaser(300, 800, 'laserDefence', this.DefenceLaser);
         }
         else 
         if(Phaser.Input.Keyboard.JustDown(this.healSelf))
@@ -488,6 +478,11 @@ class mainGame extends Phaser.Scene
                 this.setHealthbarPlayerTwo();
             }
         }
+    }
+
+    player2Specials()
+    {
+
     }
 
     movePlayers()
@@ -530,7 +525,7 @@ class mainGame extends Phaser.Scene
         }
     }
 
-     createPlayer(xPos, yPos, key, player)
+    createPlayer(xPos, yPos, key, player)
     {
         player = this.physics.add.sprite(xPos, yPos, key);
         player.health = 100;
@@ -670,10 +665,12 @@ class mainGame extends Phaser.Scene
         this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
         this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.fireSpcace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        this.fire0 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO);
-        this.specialAbility = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        this.specialAbility1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         this.healSelf = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         this.healBoth = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
+
+
+        this.specialAbility2 = this.input.keyboard.addKey
 
         return player;
     }
@@ -693,6 +690,20 @@ class mainGame extends Phaser.Scene
         ground = this.physics.add.sprite(xPos, yPos, key);
        // this.scene.physics.add.overlap(ground, this.scene.enemies, this.enemyOutOfScreen, null, this);
         return ground;
+    }
+
+    createDefenceLaser(xPos, yPos, key, defenceLaser)
+    {
+        defenceLaser = this.physics.add.sprite(xPos, yPos, key);
+        defenceLaser.setVelocityY(-200);
+        this.physics.add.overlap(defenceLaser, this.enemies,  this.defenceLaserEnemy, null, this);
+        return ground;
+    }
+
+    defenceLaserEnemy(defence, enemies)
+    {
+        enemies.destroy(true);
+        this.enemyCount--;
     }
 }
 
