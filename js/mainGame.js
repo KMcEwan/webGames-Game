@@ -306,7 +306,7 @@ class mainGame extends Phaser.Scene
 
         player.health -= 10;
         this.enemyCount--;
-        enemy.play('destroyEnemy');
+        //enemy.play('destroyEnemy');
         enemy.destroy(true);      
         if(player == player1)
         {
@@ -747,7 +747,7 @@ class mainGame extends Phaser.Scene
     defenceLaserEnemy(defence, enemies)
     {
         enemies.destroy(true);
-        enemies.play('destroyEnemy');
+        //enemies.play('destroyEnemy');
         this.enemyCount--;
     }
 }
