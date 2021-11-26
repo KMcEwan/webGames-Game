@@ -57,13 +57,13 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
     bulletHitEnemy(laser, enemy)
     {     
 
-        enemy.play('destroyEnemy', false)
-        enemy.once('animationcomplete', ()=> 
-        {
-            console.log("anmiation complete");
-            enemy.destroy();
-        }
-        )
+        // enemy.play('destroyEnemy', false)
+        // enemy.once('animationcomplete', ()=> 
+        // {
+        //     console.log("anmiation complete");
+        //     enemy.destroy();
+        // }
+        // )
 
 
        // enemy.play('destroyEnemy');
@@ -71,7 +71,7 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
            
         this.scene.enemyCount--;
         this.player.score += 10;
-       // enemy.destroy(true);    
+        enemy.destroy(true);    
     }
 
 
@@ -105,7 +105,7 @@ class mainGame extends Phaser.Scene
         this.gainLives = 1000;
         this.specialAttack = 1000;
         this.playerVelocity = 200;
-        
+        this.combinedScore = 2050;
        
         this.inputKey = this.input.keyboard.createCursorKeys(); 
         this.add.image(400, 300, 'background');  
@@ -384,7 +384,10 @@ class mainGame extends Phaser.Scene
             this.SpecialsPlayer2();
         }
         
-        
+        if(player1.score + player2.score > this.combinedScore)
+        {
+            this.scene.start("gameWonKey", player1, player2);
+        }
 
         this.checkPlayersScore();
         
