@@ -24,8 +24,8 @@ class Enemy extends Phaser.Physics.Arcade.Sprite
          { key: 'enemy',frame:4 },
          { key: 'enemy',frame:5 },
      ],
-     frameRate: 2,
-     repeat: -1
+     frameRate: 8,
+     repeat: 0
  });
 
     }
@@ -56,22 +56,17 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
 
     bulletHitEnemy(laser, enemy)
     {     
-
-        // enemy.play('destroyEnemy', false)
-        // enemy.once('animationcomplete', ()=> 
-        // {
-        //     console.log("anmiation complete");
-        //     enemy.destroy();
-        // }
-        // )
-
-
-       // enemy.play('destroyEnemy');
         laser.destroy(true);
+        enemy.body.setEnable(false);
+        enemy.play('destroyEnemy', true)
+        enemy.once('animationcomplete', ()=> 
+        {
+            console.log("anmiation complete");
+            enemy.destroy();
+        })
            
         this.scene.enemyCount--;
         this.player.score += 10;
-        enemy.destroy(true);    
     }
 
 

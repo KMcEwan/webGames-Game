@@ -27,6 +27,14 @@ class mainMenu extends Phaser.Scene
         /* TITLE MUSIC CREATION */
         const TitleMusic = this.sound.add("titleMusic");
         TitleMusic.play();
+        //TitleMusic.loop = true;
+
+        // this.TitleMusic =  this.sound.add('titleMusic',
+        // {
+        //     volume: 0.7,
+        //     loop: true
+        // })
+
 
 
         /* ON START BUTTON CLICK */
