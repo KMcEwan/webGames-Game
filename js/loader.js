@@ -9,7 +9,7 @@ class loader extends Phaser.Scene
     {
       //  this.load.image('player1', '../assets/pinkPlayer.png');
         //this.load.image('player2', '../assets/bluePlayer.png');
-        this.load.image('background', '../assets/environment/background.png');
+        this.load.image('backgroundSun', '../assets/environment/background.png');
         this.load.image('laser', '../assets/playerAssets/laser.png');
         this.load.image('laser2', '../assets/playerAssets/laser2.png');
         this.load.image('building1', '../assets/building/building1.png');
@@ -21,6 +21,7 @@ class loader extends Phaser.Scene
         this.load.image('heartFull', '../assets/UI/fullHeart.png');
         this.load.image('heartEmpty', '../assets/UI/emptyHeart.png');
         this.load.image('laserDefence', '../assets/playerAssets/laserDefenceBeam.png');
+        this.load.image('sun', '../assets/environment/sunTest.png');
 
 
         /* SPRITE SHEETS OF SCENE PLAYERS*/
@@ -28,9 +29,17 @@ class loader extends Phaser.Scene
         this.load.spritesheet('player1', '../assets/playerAssets/pinkPlayerSheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player2', '../assets/playerAssets/bluePlayerSheet.png', { frameWidth: 64, frameHeight: 64 });
 
+
+
+
+        this.load.spritesheet('background', '../assets/environment/backgroundAnim.png', { frameWidth: 600, frameHeight: 800 });
+     
         /* AUDIO - MUSIC */
         this.load.audio("titleMusic", '../assets/Audio/music/music1.mp3');
+        // this.load.audio("mainGameMusic", '../assets/Audio/music/mainGameMusic.mp3');
 
+        /* SOUND EFFECTS */
+        this.load.audio("thrust", '../assets/Audio/effects/thrustSoundEffect.mp3');
 
         /* BUTTONS */
         this.load.image('startButton', '../assets/UI/startButton.png');

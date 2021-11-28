@@ -13,7 +13,8 @@ class mainMenu extends Phaser.Scene
     create()
     {
         /*ADD BACKGROUND IMAGE */
-        this.add.image(400, 300, 'background');  
+        this.backgroundSun = this.add.image(300,400, 'backgroundSun');
+        this.add.image(300, 400, 'background');  
 
         /* START BUTTON CREATION */
         const startButton = this.add.image(config.width / 2, config.height / 2 - 100, 'startButton');

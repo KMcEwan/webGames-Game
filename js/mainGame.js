@@ -99,6 +99,12 @@ class mainGame extends Phaser.Scene
     create()
     {
 
+        /* TESTING PURPOSES ONLY */
+        const TitleMusic = this.sound.add("titleMusic");
+        TitleMusic.play();
+
+        /* TESTING PURPOSES ONLY END */
+
         this.scoreForHealSelf = 200;
         this.scoreForHealBoth = 300;
         this.specialAbility1 = 300;
@@ -106,9 +112,19 @@ class mainGame extends Phaser.Scene
         this.specialAttack = 1000;
         this.playerVelocity = 200;
         this.combinedScore = 2050;
+        this.thrustPlayingOne = false;
        
+        // const gameMusic = this.sound.add("mainGameMusic");
+        // gameMusic.play();
+
+        this.thrustEffect = this.sound.add("thrust");
+
+
         this.inputKey = this.input.keyboard.createCursorKeys(); 
-        this.add.image(400, 300, 'background');  
+        this.backgroundSun = this.add.image(300,400, 'backgroundSun');
+        this.background = this.createBackground();
+  
+ 
         player1 = this.createPlayer(200, 500, 'player1', player1);
         player2 = this.createPlayer(600, 500, 'player2', player2);
         player1.setSize(50, 40, true);
@@ -135,6 +151,10 @@ class mainGame extends Phaser.Scene
         this.physics.add.overlap(player2, this.enemies,  this.enemyHitPlayer, null, this);
         this.physics.add.overlap(player1, this.enemies,  this.enemyHitPlayer, null, this);
         
+
+
+        
+
 
 
         this.player1Image = this.add.image(135,40, 'player1');
@@ -323,6 +343,7 @@ class mainGame extends Phaser.Scene
     /* UPDATE FUNCTION START */
     update()
     { 
+     
 
         this.playerOneScore.setText('score : ' + player1.score);
         this.playerTwoScore.setText('score : ' + player2.score);
@@ -337,6 +358,8 @@ class mainGame extends Phaser.Scene
             player2.setVelocityX(0);
             player1.play('player1Stationary');
             player2.play('player2Stationary');
+            this.thrustPlayingOne = false;
+            this.thrustEffect.stop();
         }
         if(this.fireSpcace.isDown && this.aKey.isDown)
         {
@@ -538,11 +561,18 @@ class mainGame extends Phaser.Scene
     }
 
     movePlayer1()
-    {
-        if(this.aKey.isDown)
-        {
+    {  
+     
+        if(Phaser.Input.Keyboard.JustDown(this.aKey))
+        {          
             player1.setVelocityX(-this.playerVelocity);
             player1.play('player1MoveLeft');
+            console.log(this.play)
+            if (this.thrustPlayingOne !== true) {
+                this.thrustEffect.play();
+                this.thrustPlayingOne = true;
+                console.log("PLAY");
+            }           
         }
         else
         if(this.dKey.isDown)
@@ -550,6 +580,7 @@ class mainGame extends Phaser.Scene
             player1.setVelocityX(this.playerVelocity);
             player1.play('player1MoveRight');
         }
+
     }
 
     movePlayer2()
@@ -749,6 +780,48 @@ class mainGame extends Phaser.Scene
         enemies.destroy(true);
         //enemies.play('destroyEnemy');
         this.enemyCount--;
+    }
+
+    createBackground()
+    {
+       // this.background = this.add.tileSprite(300, 400, 600, 800, 'background')
+        this.background = this.physics.add.sprite(300, 400, 'background');
+        this.anims.create
+        ({
+         key: 'backgroundMove',
+         frames: [
+             { key: 'background',frame:0 },
+             { key: 'background',frame:1 },
+             { key: 'background',frame:2 },
+             { key: 'background',frame:3 },
+             { key: 'background',frame:4 },
+             { key: 'background',frame:5 },
+             { key: 'background',frame:6 },
+             { key: 'background',frame:7 },
+             { key: 'background',frame:8 },
+             { key: 'background',frame:9 },
+             { key: 'background',frame:10 },
+             { key: 'background',frame:11 },
+             { key: 'background',frame:12 },
+             { key: 'background',frame:13 },
+             { key: 'background',frame:14 },
+             { key: 'background',frame:15 },
+             { key: 'background',frame:16 },
+             { key: 'background',frame:17 },
+             { key: 'background',frame:18 },
+             { key: 'background',frame:19 },
+             { key: 'background',frame:20 },
+             { key: 'background',frame:21 },
+             { key: 'background',frame:22 },
+             { key: 'background',frame:23 },
+            //  { key: 'background',frame:24 },
+
+         ],
+         frameRate: 6,
+         repeat: -1
+     });
+     this.background.play('backgroundMove');
+     return this.background;   
     }
 }
 
