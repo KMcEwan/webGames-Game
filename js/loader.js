@@ -40,6 +40,8 @@ class loader extends Phaser.Scene
 
         /* SOUND EFFECTS */
         this.load.audio("thrust", '../assets/Audio/effects/thrustSoundEffect.mp3');
+        this.load.audio("enemyExplosion", '../assets/Audio/effects/explsionSoundEffect.mp3');
+        this.load.audio("laserFire", '../assets/Audio/effects/laserSoundEffect.mp3');
 
         /* BUTTONS */
         this.load.image('startButton', '../assets/UI/startButton.png');

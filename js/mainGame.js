@@ -58,11 +58,13 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
     {     
         laser.destroy(true);
         enemy.body.setEnable(false);
+        this.scene.explosionSound.play();
         enemy.play('destroyEnemy', true)
         enemy.once('animationcomplete', ()=> 
         {
-          //  console.log("anmiation complete");
+            this.scene.explosionSound.stop();
             enemy.destroy();
+ 
         })
            
         this.scene.enemyCount--;
@@ -114,6 +116,8 @@ class mainGame extends Phaser.Scene
 
         this.thrustEffect = this.sound.add("thrust");
         this.thrustEffect2 = this.sound.add("thrust");                                               // Keep two audios, needed so one doesnt switch the other off.
+        this.explosionSound = this.sound.add("enemyExplosion");
+        this.laserEffect = this.sound.add("laserFire");
 
         this.inputKey = this.input.keyboard.createCursorKeys(); 
         this.backgroundSun = this.add.image(300,400, 'backgroundSun');
@@ -195,8 +199,10 @@ class mainGame extends Phaser.Scene
 
 
 
-        this.lastFired = new Date().getTime();
-        this.shotFreq = 300;
+        this.lastFiredOne = new Date().getTime();
+        this.shotFreqOne = 300;
+        this.lastFiredTwo = new Date().getTime();
+        this.shotFreqTwo = 300;
     };
 
     setHealthbarPlayerOne()
@@ -206,32 +212,47 @@ class mainGame extends Phaser.Scene
         this.graphicsPlayerOneHealth.clear();
         this.graphicsPlayerOneHealth.fillStyle(0x808080);
         this.graphicsPlayerOneHealth.fillRoundedRect(5, 40, this.width, 10, 5);
-       // console.log("player lives : " , player1.lives);
  
         if(this.percent >= .1)
         {
             this.drawPlayer1Health();
+            console.log(this.percent);
         }
-        else
+        else 
         {
-            player1.lives --;
-            
+            console.log(this.percent);
+            this.respawnPlayer1();  
+            player1.lives --;                     
             this.setPlayers1Lives();
+          
           
 
             if(player1.lives > 0)
             {
                 player1.health = 100;                
                 this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
-               // console.log("player lives : " , player1.lives);
                 this.drawPlayer1Health();
             }
             else
             {
-                this.scene.start("gameOverKey");
-                this.game.sound.stopAll();
+                player1.isAlive = false;
+                this.checkPlayersAlive();
             }
         }
+    }
+
+    respawnPlayer1()
+    {      
+        console.log("respawning function");
+        player1.anims.stop();
+        player1.once('animationcomplete', ()=> 
+        {
+           // player1.play('deathFlash', true);
+            console.log("respawn");         
+        })
+        player1.play('deathFlash', true)
+        player1.x = 200;
+        player1.y = 500;
     }
 
     drawPlayer1Health()
@@ -257,6 +278,14 @@ class mainGame extends Phaser.Scene
             } )
     }
 
+    checkPlayersAlive()
+    {
+        if(!player1.isAlive && !player2.isAlive)
+        {
+            this.scene.start("gameOverKey");
+            this.game.sound.stopAll();
+        }
+    }
 
     
     setHealthbarPlayerTwo()
@@ -286,8 +315,10 @@ class mainGame extends Phaser.Scene
             }
             else
             {
-                this.scene.start("gameOverKey");
-                this.game.sound.stopAll();
+                // this.scene.start("gameOverKey");
+                // this.game.sound.stopAll();
+                player2.isAlive = false;
+                this.checkPlayersAlive();
             }
         }
     }
@@ -372,9 +403,10 @@ class mainGame extends Phaser.Scene
         if(this.fireSpcace.isDown && this.aKey.isDown)
         {
             var currentTime = new Date().getTime();
-            if (currentTime - this.lastFired > this.shotFreq) {
+            if (currentTime - this.lastFiredOne > this.shotFreqOne) {
+                this.laserEffect.play();
                 var canLaser = new cannonLaser(this, player1.x, player1.y - 40, 'laser', player1);
-                this.lastFired = currentTime;
+                this.lastFiredOne = currentTime;
                
             }
             player1.play('fireLeft1');
@@ -382,27 +414,35 @@ class mainGame extends Phaser.Scene
         else if (this.fireSpcace.isDown && this.dKey.isDown)
         {
             var currentTime = new Date().getTime();
-            if (currentTime - this.lastFired > this.shotFreq) {
+            if (currentTime - this.lastFiredOne > this.shotFreqOne) {
+                this.laserEffect.play();
                 var canLaser = new cannonLaser(this, player1.x, player1.y - 40, 'laser', player1);
-                this.lastFired = currentTime;
-               
+                this.lastFiredOne = currentTime;               
             }
             player1.play('fireRight1');
         }
         else if (this.fireSpcace.isDown)
         {
             var currentTime = new Date().getTime();
-            if (currentTime - this.lastFired > this.shotFreq) {
+            if (currentTime - this.lastFiredOne > this.shotFreqOne) {
+                this.laserEffect.play();
                 var canLaser = new cannonLaser(this, player1.x, player1.y - 40, 'laser', player1);
-                this.lastFired = currentTime;
-               
+                this.lastFiredOne = currentTime;                             
             }
             player1.play('fireStationary1');
         }
 
         if(this.inputKey.up.isDown)
         {
-            var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2', player2);         
+            // var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2', player2);        
+            var currentTime = new Date().getTime();
+            if (currentTime - this.lastFiredTwo > this.shotFreqTwo) {
+                this.laserEffect.play();
+                var canLaser = new cannonLaser(this, player2.x, player2.y - 40, 'laser2', player2);
+                this.lastFiredTwo = currentTime;
+               
+            }
+            player1.play('fireLeft1'); 
         }  
 
         if(this.specialAbility1.isDown || this.healBoth.isDown || this.healSelf.isDown)
@@ -681,6 +721,17 @@ class mainGame extends Phaser.Scene
             ],
             frameRate: 24,
             repeat: 0
+        }); 
+
+        this.anims.create
+        ({
+            key: 'deathFlash',
+            frames: 
+            [
+                { key: 'player1',frame:6 },
+            ],
+            frameRate: 24,
+            repeat:-1
         }); 
 
         //PLAYER 2

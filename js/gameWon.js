@@ -12,9 +12,10 @@ class gameWon extends Phaser.Scene
 
     create()
     {
-        this.add.image(400, 300, 'background');  
-        this.playerOneScore = this.add.text (5,55, 'score : 0', { fontFamily: 'CustomFont', fill: '#df03fc'});
-        this.playerTwoScore = this.add.text (460, 55, 'score : 0', {fontFamily: 'CustomFont', fill: '#0000FF'});
+        this.backgroundSun = this.add.image(300,400, 'backgroundSun');
+        this.add.image(300, 400, 'background');  
+        this.playerOneScore = this.add.text (config.width / 2, config.height / 2 + 200, 'score : 0', { fontFamily: 'CustomFont', fill: '#df03fc'});
+        this.playerTwoScore = this.add.text (config.width / 2, config.height / 2 + 300, 'score : 0', {fontFamily: 'CustomFont', fill: '#0000FF'});
 
         this.playerOneScore.setText('score : ' + player1.score);
         this.playerTwoScore.setText('score : ' + player2.score);
