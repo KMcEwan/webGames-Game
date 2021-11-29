@@ -61,7 +61,7 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
         enemy.play('destroyEnemy', true)
         enemy.once('animationcomplete', ()=> 
         {
-            console.log("anmiation complete");
+          //  console.log("anmiation complete");
             enemy.destroy();
         })
            
@@ -95,8 +95,7 @@ class mainGame extends Phaser.Scene
     {
 
         /* TESTING PURPOSES ONLY */
-        const TitleMusic = this.sound.add("titleMusic");
-        TitleMusic.play();
+
 
         /* TESTING PURPOSES ONLY END */
 
@@ -108,12 +107,13 @@ class mainGame extends Phaser.Scene
         this.playerVelocity = 200;
         this.combinedScore = 2050;
         this.thrustPlayingOne = false;
+        this.thrustPlayingTwo = false;
        
         // const gameMusic = this.sound.add("mainGameMusic");
         // gameMusic.play();
 
         this.thrustEffect = this.sound.add("thrust");
-
+        this.thrustEffect2 = this.sound.add("thrust");                                               // Keep two audios, needed so one doesnt switch the other off.
 
         this.inputKey = this.input.keyboard.createCursorKeys(); 
         this.backgroundSun = this.add.image(300,400, 'backgroundSun');
@@ -206,7 +206,7 @@ class mainGame extends Phaser.Scene
         this.graphicsPlayerOneHealth.clear();
         this.graphicsPlayerOneHealth.fillStyle(0x808080);
         this.graphicsPlayerOneHealth.fillRoundedRect(5, 40, this.width, 10, 5);
-        console.log("player lives : " , player1.lives);
+       // console.log("player lives : " , player1.lives);
  
         if(this.percent >= .1)
         {
@@ -223,7 +223,7 @@ class mainGame extends Phaser.Scene
             {
                 player1.health = 100;                
                 this.percent = Phaser.Math.Clamp(player1.health, 0, 100) / 100;
-                console.log("player lives : " , player1.lives);
+               // console.log("player lives : " , player1.lives);
                 this.drawPlayer1Health();
             }
             else
@@ -266,7 +266,7 @@ class mainGame extends Phaser.Scene
         this.graphicsPlayerTwoHealth.clear();
         this.graphicsPlayerTwoHealth.fillStyle(0x808080);
         this.graphicsPlayerTwoHealth.fillRoundedRect(455, 40, this.width, 10, 5);
-        console.log("player lives : " , player2.lives);
+       // console.log("player lives : " , player2.lives);
  
         if(this.percent >= .1)
         {
@@ -281,7 +281,7 @@ class mainGame extends Phaser.Scene
             {
                 player2.health = 100;                
                 this.percent = Phaser.Math.Clamp(player2.health, 0, 100) / 100;
-                console.log("player lives : " , player2.lives);
+              //  console.log("player lives : " , player2.lives);
                 this.drawPlayer2Health();
             }
             else
@@ -343,19 +343,32 @@ class mainGame extends Phaser.Scene
         this.playerOneScore.setText('score : ' + player1.score);
         this.playerTwoScore.setText('score : ' + player2.score);
 
-        if(this.aKey.isDown || this.dKey.isDown || this.inputKey.left.isDown || this.inputKey.right.isDown)
+        if(this.aKey.isDown || this.dKey.isDown)
         {
-            this.movePlayers();
+            this.movePlayer1();
         }
         else
         {
-            player1.setVelocityX(0);
-            player2.setVelocityX(0);
-            player1.play('player1Stationary');
-            player2.play('player2Stationary');
+            player1.setVelocityX(0);           
+            player1.play('player1Stationary');      
             this.thrustPlayingOne = false;
             this.thrustEffect.stop();
         }
+
+        if(this.inputKey.left.isDown || this.inputKey.right.isDown)
+        {
+            this.movePlayer2();
+        }
+        else
+        {
+            player2.setVelocityX(0);
+            player2.play('player2Stationary');
+            this.thrustPlayingTwo = false;
+            this.thrustEffect2.stop();
+        }
+
+
+
         if(this.fireSpcace.isDown && this.aKey.isDown)
         {
             var currentTime = new Date().getTime();
@@ -453,12 +466,12 @@ class mainGame extends Phaser.Scene
         else
         if(this.maxScore < 600)
         {
-            console.log("Second set of enemies");
+           // console.log("Second set of enemies");
         }
         else
         if(this.maxScore < 900)
         {
-            console.log("Second set of enemies");
+            //console.log("Second set of enemies");
         }
 
     }
@@ -544,16 +557,7 @@ class mainGame extends Phaser.Scene
             }
         }
     }
-
-    movePlayers()
-    {
-        if(this.aKey.isDown || this.dKey.isDown || this.inputKey.left.isDown || this.inputKey.right.isDown)
-        {
-            this.movePlayer1();
-            this.movePlayer2();
-            this.score += 10;        
-        }       
-    }
+   
 
     movePlayer1()
     {  
@@ -561,35 +565,48 @@ class mainGame extends Phaser.Scene
         if(Phaser.Input.Keyboard.JustDown(this.aKey))
         {          
             player1.setVelocityX(-this.playerVelocity);
-            player1.play('player1MoveLeft');
-            console.log(this.play)
+            player1.play('player1MoveLeft');          
             if (this.thrustPlayingOne !== true) {
                 this.thrustEffect.play();
-                this.thrustPlayingOne = true;
-                console.log("PLAY");
+                this.thrustPlayingOne = true;             
             }           
         }
         else
-        if(this.dKey.isDown)
+        if(Phaser.Input.Keyboard.JustDown(this.dKey))
         {
             player1.setVelocityX(this.playerVelocity);
             player1.play('player1MoveRight');
+            if (this.thrustPlayingOne !== true) {
+                this.thrustEffect.play();
+                this.thrustPlayingOne = true;               
+            }           
         }
 
     }
 
+   
     movePlayer2()
     {
-        if(this.inputKey.left.isDown)
+        if(Phaser.Input.Keyboard.JustDown(this.inputKey.left))
         {
             player2.setVelocityX(-this.playerVelocity);
             player2.play('player2MoveLeft');
+            if (this.thrustPlayingTwo !== true) {
+                console.log(" THRUST TEST")
+                this.thrustEffect2.play();
+                this.thrustPlayingTwo = true;
+            }           
         }
         else
-        if(this.inputKey.right.isDown)
+        if(Phaser.Input.Keyboard.JustDown(this.inputKey.right))
         {
             player2.setVelocityX(this.playerVelocity);
             player2.play('player2MoveRight');
+            if (this.thrustPlayingTwo !== true) {
+                console.log(" THRUST TEST")
+                this.thrustEffect2.play();
+                this.thrustPlayingTwo = true;
+            }           
         }
     }
 

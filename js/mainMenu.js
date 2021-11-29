@@ -25,8 +25,20 @@ class mainMenu extends Phaser.Scene
         controlButton.setInteractive();
 
         /* TITLE MUSIC CREATION */
-        const TitleMusic = this.sound.add("titleMusic");
-        TitleMusic.play();
+        //const TitleMusic = this.sound.add("titleMusic");                              // TURN BACK ON AFTER TESTING
+       // TitleMusic.play();
+
+
+
+
+
+
+
+
+
+
+
+
         //TitleMusic.loop = true;
 
         // this.TitleMusic =  this.sound.add('titleMusic',
@@ -42,7 +54,7 @@ class mainMenu extends Phaser.Scene
         {
             console.log('start button');
             this.scene.start("gameKey");
-            TitleMusic.stop();
+           // TitleMusic.stop();                                                                    // TURN BACK ON 
         });
 
         /* ON CONTROL BUTTON CLICK */
