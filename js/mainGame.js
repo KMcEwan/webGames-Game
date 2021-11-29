@@ -158,7 +158,7 @@ class mainGame extends Phaser.Scene
      
         
         this.playerOneScore = this.add.text (5,55, 'score : 0', { fontFamily: 'CustomFont', fill: '#df03fc'});
-        this.playerTwoScore = this.add.text (460, 55, 'score : 0', {fontFamily: 'CustomFont', fill: '#0000FF'});
+        this.playerTwoScore = this.add.text (460, 55, 'score : 0', {fontFamily: 'CustomFont', fill: '#0377fc'});
 
 
         this.graphicsPlayerOneHealth = this.add.graphics();
@@ -276,7 +276,7 @@ class mainGame extends Phaser.Scene
     {
         if(!player1.isAlive && !player2.isAlive)
         {
-            this.scene.start("gameOverKey");
+            this.scene.start("gameOverKey", player1, player2);
             this.game.sound.stopAll();
         }
     }
@@ -363,8 +363,11 @@ class mainGame extends Phaser.Scene
     /* UPDATE FUNCTION START */
     update()
     { 
-     
-
+        if(this.inputKey.down.isDown)                                       //TESTING ONLY
+        {
+            this.scene.start("gameOverKey", player1, player2);
+        }
+        
         this.playerOneScore.setText('score : ' + player1.score);
         this.playerTwoScore.setText('score : ' + player2.score);
 

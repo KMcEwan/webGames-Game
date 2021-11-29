@@ -1,8 +1,8 @@
 class gameOver extends Phaser.Scene
 {
-    constructor ()
+    constructor (player1, player2)
     {
-        super({key: "gameOverKey"});
+        super({key: "gameOverKey", player1, player2});
     }
 
     preload()
@@ -15,6 +15,12 @@ class gameOver extends Phaser.Scene
         this.backgroundSun = this.add.image(300,400, 'backgroundSun');
         this.add.image(300, 400, 'background');  
         console.log("controls script");
+
+        this.playerOneScore = this.add.text (config.width / 2 - 200, config.height / 2 + 50, 'P1 score : 0', { font: '48px CustomFont', fill: '#e357ff' });
+        this.playerTwoScore = this.add.text (config.width / 2 - 200, config.height / 2 + 130, 'P2 score : 0', {font: '48px CustomFont', fill: '#0377fc'});
+
+        this.playerOneScore.setText('P1 score : ' + player1.score);
+        this.playerTwoScore.setText('P2 score : ' + player2.score);
 
         const startButton = this.add.image(config.width / 2, config.height / 2 - 100, 'startButton');
         startButton.setInteractive();
