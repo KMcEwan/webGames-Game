@@ -117,7 +117,7 @@ class mainGame extends Phaser.Scene
         this.thrustEffect = this.sound.add("thrust");
         this.thrustEffect2 = this.sound.add("thrust");                                               // Keep two audios, needed so one doesnt switch the other off.
         this.explosionSound = this.sound.add("enemyExplosion");
-        this.laserEffect = this.sound.add("laserFire");
+        this.laserEffect = this.sound.add("laserFire", {volume: 0.5});
 
         this.inputKey = this.input.keyboard.createCursorKeys(); 
         this.backgroundSun = this.add.image(300,400, 'backgroundSun');
@@ -150,12 +150,6 @@ class mainGame extends Phaser.Scene
         this.physics.add.overlap(player2, this.enemies,  this.enemyHitPlayer, null, this);
         this.physics.add.overlap(player1, this.enemies,  this.enemyHitPlayer, null, this);
         
-
-
-        
-
-
-
         this.player1Image = this.add.image(135,40, 'player1');
         this.player1Image.setScale(0.75)
 

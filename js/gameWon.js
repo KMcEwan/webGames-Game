@@ -14,11 +14,11 @@ class gameWon extends Phaser.Scene
     {
         this.backgroundSun = this.add.image(300,400, 'backgroundSun');
         this.add.image(300, 400, 'background');  
-        this.playerOneScore = this.add.text (config.width / 2, config.height / 2 + 200, 'score : 0', { fontFamily: 'CustomFont', fill: '#df03fc'});
-        this.playerTwoScore = this.add.text (config.width / 2, config.height / 2 + 300, 'score : 0', {fontFamily: 'CustomFont', fill: '#0000FF'});
+        this.playerOneScore = this.add.text (config.width / 2 - 200, config.height / 2 + 50, 'P1 score : 0', { font: '48px CustomFont', fill: '#0000FF' });
+        this.playerTwoScore = this.add.text (config.width / 2 - 200, config.height / 2 + 130, 'P2 score : 0', {font: '48px CustomFont', fill: '#df03fc'});
 
-        this.playerOneScore.setText('score : ' + player1.score);
-        this.playerTwoScore.setText('score : ' + player2.score);
+        this.playerOneScore.setText('P1 score : ' + player1.score);
+        this.playerTwoScore.setText('P2 score : ' + player2.score);
 
         const startButton = this.add.image(config.width / 2, config.height / 2 - 100, 'startButton');
         startButton.setInteractive();
