@@ -103,11 +103,11 @@ class mainGame extends Phaser.Scene
 
         this.scoreForHealSelf = 200;
         this.scoreForHealBoth = 300;
-        this.specialAbility1 = 300;
-        this.gainLives = 1000;
-        this.specialAttack = 1000;
+      //  this.specialAbility1 = 300;
+        this.gainLives = 500;
+        this.specialAttack = 500;
         this.playerVelocity = 200;
-        this.combinedScore = 2050;
+        this.combinedWinScore = 2050;
         this.thrustPlayingOne = false;
         this.thrustPlayingTwo = false;
        
@@ -118,6 +118,7 @@ class mainGame extends Phaser.Scene
         this.thrustEffect2 = this.sound.add("thrust");                                               // Keep two audios, needed so one doesnt switch the other off.
         this.explosionSound = this.sound.add("enemyExplosion");
         this.laserEffect = this.sound.add("laserFire", {volume: 0.5});
+        this.specialLaserBeam = this.sound.add("specialLaserBeam");
 
         this.inputKey = this.input.keyboard.createCursorKeys(); 
         this.backgroundSun = this.add.image(300,400, 'backgroundSun');
@@ -365,7 +366,7 @@ class mainGame extends Phaser.Scene
     { 
         if(this.inputKey.down.isDown)                                       //TESTING ONLY
         {
-            this.scene.start("gameOverKey", player1, player2);
+            player2.score = 1000;
         }
         
         this.playerOneScore.setText('score : ' + player1.score);
@@ -452,8 +453,11 @@ class mainGame extends Phaser.Scene
             this.SpecialsPlayer2();
         }
         
-        if(player1.score + player2.score > this.combinedScore)
+        if(player1.score + player2.score > this.combinedWinScore)
         {
+            this.thrustEffect.stop();
+            this.thrustEffect2.stop();
+            this.laserEffect.stop();
             this.scene.start("gameWonKey", player1, player2);
         }
 
@@ -483,10 +487,10 @@ class mainGame extends Phaser.Scene
             this.maxScore = player2.score;
         }
 
-        if(this.maxScore > 0)
+        if(this.maxScore >= 0 && this.maxScore < 300)
         {
             this.enemiesInScene = this.firstWave - this.enemyCount;         
-
+            console.log("FIRST WAVE");
             for (let k = 0; k < this.enemiesInScene; k++) 
             {
                 let x = Phaser.Math.Between(580, 20);   
@@ -501,14 +505,40 @@ class mainGame extends Phaser.Scene
             }
         }
         else
-        if(this.maxScore < 600)
+        if(this.maxScore > 300 && this.maxScore < 600)
         {
-           // console.log("Second set of enemies");
+            this.enemiesInScene = this.secondWave - this.enemyCount;   
+            console.log("SECOND WAVE");
+            for (let k = 0; k < this.enemiesInScene; k++) 
+            {
+                let x = Phaser.Math.Between(580, 20);   
+                let vel = Phaser.Math.Between(300, 10);   
+                this.enemy = new Enemy(this, x, 0, 'enemy');
+                this.enemy.play('flash');
+                this.add.existing(this.enemy);
+                this.enemies.add(this.enemy);
+                this.enemy.setVelocityY(vel);
+                this.enemies2.push(this.enemy);
+                this.enemyCount++;
+            }
         }
         else
-        if(this.maxScore < 900)
+        if(this.maxScore > 600)
         {
-            //console.log("Second set of enemies");
+            this.enemiesInScene = this.thirdWave - this.enemyCount;   
+            console.log("THIRD WAVE");
+            for (let k = 0; k < this.enemiesInScene; k++) 
+            {
+                let x = Phaser.Math.Between(580, 20);   
+                let vel = Phaser.Math.Between(300, 10);   
+                this.enemy = new Enemy(this, x, 0, 'enemy');
+                this.enemy.play('flash');
+                this.add.existing(this.enemy);
+                this.enemies.add(this.enemy);
+                this.enemy.setVelocityY(vel);
+                this.enemies2.push(this.enemy);
+                this.enemyCount++;
+            }
         }
 
     }
@@ -527,7 +557,7 @@ class mainGame extends Phaser.Scene
                 {
                     player2.lives++;
                 }
-                player1.score -= 1000;
+                player1.score -= this.specialAttack;
                 this.setPlayers1Lives();
                 this.setPlayers2Lives();
             }
@@ -539,7 +569,7 @@ class mainGame extends Phaser.Scene
             if(player1.score >= this.scoreForHealSelf)
             {
                 player1.health = 100;
-                player1.score -= 200;
+                player1.score -= this.healSelf;
                 this.setHealthbarPlayerOne();
                 this.setHealthbarPlayerTwo();
             }     
@@ -551,7 +581,7 @@ class mainGame extends Phaser.Scene
             {
                 player1.health = 100;
                 player2.health = 100;
-                player1.score -= 300;
+                player1.score -= this.healBoth;
                 this.setHealthbarPlayerOne();
                 this.setHealthbarPlayerTwo();
             }
@@ -566,6 +596,7 @@ class mainGame extends Phaser.Scene
             if(player2.score >= this.specialAttack)
             {
                 this.DefenceLaser = this.createDefenceLaser(300, 800, 'laserDefence', this.DefenceLaser);
+                this.specialLaserBeam.play();
                 player2.score -= this.specialAttack;
             }
          
@@ -653,7 +684,7 @@ class mainGame extends Phaser.Scene
         player.health = 100;
         player.lives = 3; 
         player.isAlive = true;
-        player.score = 1000; 
+        player.score = 0; 
         player.setCollideWorldBounds(true); 
 
         // PLAYER 1
