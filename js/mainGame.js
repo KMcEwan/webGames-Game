@@ -120,6 +120,8 @@ class mainGame extends Phaser.Scene
         this.laserEffect = this.sound.add("laserFire", {volume: 0.5});
         this.specialLaserBeam = this.sound.add("specialLaserBeam");
         this.lifeLost = this.sound.add("lifeLost");
+        this.gainLife = this.sound.add("gainLife");
+        this.gainHealth = this.sound.add("gainHealth");
 
         this.inputKey = this.input.keyboard.createCursorKeys(); 
         this.backgroundSun = this.add.image(300,400, 'backgroundSun');
@@ -368,6 +370,7 @@ class mainGame extends Phaser.Scene
     { 
         if(this.inputKey.down.isDown)                                       //TESTING ONLY
         {
+            player1.score = 1000;
             player2.score = 1000;
         }
         
@@ -559,6 +562,7 @@ class mainGame extends Phaser.Scene
                 {
                     player2.lives++;
                 }
+                this.gainLife.play();
                 player1.score -= this.specialAttack;
                 this.setPlayers1Lives();
                 this.setPlayers2Lives();
@@ -571,9 +575,10 @@ class mainGame extends Phaser.Scene
             if(player1.score >= this.scoreForHealSelf)
             {
                 player1.health = 100;
-                player1.score -= this.healSelf;
+                player1.score -= this.scoreForHealSelf;
                 this.setHealthbarPlayerOne();
                 this.setHealthbarPlayerTwo();
+                this.gainHealth.play();
             }     
         }
         else
@@ -583,9 +588,10 @@ class mainGame extends Phaser.Scene
             {
                 player1.health = 100;
                 player2.health = 100;
-                player1.score -= this.healBoth;
+                player1.score -= this.scoreForHealBoth;
                 this.setHealthbarPlayerOne();
                 this.setHealthbarPlayerTwo();
+                this.gainHealth.play();
             }
         }
     }
