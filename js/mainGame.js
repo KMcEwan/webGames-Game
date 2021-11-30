@@ -119,6 +119,7 @@ class mainGame extends Phaser.Scene
         this.explosionSound = this.sound.add("enemyExplosion");
         this.laserEffect = this.sound.add("laserFire", {volume: 0.5});
         this.specialLaserBeam = this.sound.add("specialLaserBeam");
+        this.lifeLost = this.sound.add("lifeLost");
 
         this.inputKey = this.input.keyboard.createCursorKeys(); 
         this.backgroundSun = this.add.image(300,400, 'backgroundSun');
@@ -215,6 +216,7 @@ class mainGame extends Phaser.Scene
         }
         else 
         {
+            this.lifeLost.play();
             console.log(this.percent);
             this.respawnPlayer1();  
             player1.lives --;                     
