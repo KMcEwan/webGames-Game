@@ -618,6 +618,7 @@ class mainGame extends Phaser.Scene
                 player2.score -= this.scoreForHealSelf;
                 this.setHealthbarPlayerOne();
                 this.setHealthbarPlayerTwo();
+                this.gainHealth.play();
             }     
         }
         else
@@ -630,6 +631,7 @@ class mainGame extends Phaser.Scene
                 player2.score -= this.scoreForHealBoth;
                 this.setHealthbarPlayerOne();
                 this.setHealthbarPlayerTwo();
+                this.gainHealth.play();
             }
         }
     }
