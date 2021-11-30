@@ -124,6 +124,11 @@ class mainGame extends Phaser.Scene
         this.gainHealth = this.sound.add("gainHealth");
 
         this.inputKey = this.input.keyboard.createCursorKeys(); 
+
+        ground = this.createGround(300, 796, 'ground', ground);
+        topGround = this.createGround(300, 1, 'ground', topGround);
+
+
         this.backgroundSun = this.add.image(300,400, 'backgroundSun');
         this.background = this.createBackground();
   
@@ -133,13 +138,42 @@ class mainGame extends Phaser.Scene
         player1.setSize(50, 40, true);
         player2.setSize(50, 40, true);
        
-        // building1 = this.createBuilding(75, 700, 'building1', building1);
+        // building1 = this.createBuilding(43, 712, 'building1', building1);
+        // building1.setScale(2);
+        // building1.play('onOff');
+
+        // building2 = this.createBuilding(163, 712, 'building2', building2);
+        // building2.setScale(2);
+        // building2.play('onOff2');
+
+        building1 = this.createBuilding(43, 712, 'building1');
+        building1.setScale(2);
+        building1.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building1.setTexture('building1'))
+        building1.play('building1_onOff');
+
+
+        building2 = this.createBuilding(163, 712, 'building2');
+        building2.setScale(2);
+        building2.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building2.setTexture('building2'))
+        building2.play('building2_onOff');
+
+        building3 = this.createBuilding(283, 712, 'building3');
+        building3.setScale(2);
+        building3.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building3.setTexture('building3'))
+        building3.play('building3_onOff');
+
+        building4 = this.createBuilding(403, 712, 'building4');
+        building4.setScale(2);
+        building4.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building4.setTexture('building4'))
+        building4.play('building4_onOff');
+
+
+
         // building2 = this.createBuilding(225, 700, 'building2', building2);
         // building3 = this.createBuilding(375, 700, 'building3', building3);
         // building4 = this.createBuilding(525, 700, 'building4', building4);
 
-        ground = this.createGround(300, 796, 'ground', ground);
-        topGround = this.createGround(300, 1, 'ground', topGround);
+
         //top = this.createGround(300, 796, 'ground', top);
 
         this.enemyCount = 0;
@@ -495,7 +529,7 @@ class mainGame extends Phaser.Scene
         if(this.maxScore >= 0 && this.maxScore < 300)
         {
             this.enemiesInScene = this.firstWave - this.enemyCount;         
-            console.log("FIRST WAVE");
+            //console.log("FIRST WAVE");
             for (let k = 0; k < this.enemiesInScene; k++) 
             {
                 let x = Phaser.Math.Between(580, 20);   
@@ -513,7 +547,7 @@ class mainGame extends Phaser.Scene
         if(this.maxScore > 300 && this.maxScore < 600)
         {
             this.enemiesInScene = this.secondWave - this.enemyCount;   
-            console.log("SECOND WAVE");
+           // console.log("SECOND WAVE");
             for (let k = 0; k < this.enemiesInScene; k++) 
             {
                 let x = Phaser.Math.Between(580, 20);   
@@ -531,7 +565,7 @@ class mainGame extends Phaser.Scene
         if(this.maxScore > 600)
         {
             this.enemiesInScene = this.thirdWave - this.enemyCount;   
-            console.log("THIRD WAVE");
+            //console.log("THIRD WAVE");
             for (let k = 0; k < this.enemiesInScene; k++) 
             {
                 let x = Phaser.Math.Between(580, 20);   
@@ -851,15 +885,64 @@ class mainGame extends Phaser.Scene
         return player;
     }
 
-    createBuilding(xPos, yPos, key, building)
-    {
-        building = this.physics.add.sprite(xPos, yPos, key);
+    // createBuilding(xPos, yPos, key, building)
+    // {
+    //     building = this.physics.add.sprite(xPos, yPos, key);
+    //     building.health = 100;
+    //     building.isAlive = true;
+
+
+    //     this.anims.create
+    //     ({
+    //         key: 'onOff',
+    //         frames: 
+    //         [
+    //             { key: 'building1',frame:0 },
+    //             { key: 'building1',frame:1 },
+    //         ],
+    //         frameRate: 1,
+    //         repeat: -1
+    //     }); 
+
+    //     this.anims.create
+    //     ({
+    //         key: 'onOff2',
+    //         frames: 
+    //         [
+    //             { key: 'building2',frame:0 },
+    //             { key: 'building2',frame:1 },
+    //         ],
+    //         frameRate: 1,
+    //         repeat: -1
+    //     }); 
+
+
+
+    //     return building;
+    // }
+
+    createBuilding(xPos, yPos, key) {
+        let building = this.physics.add.sprite(xPos, yPos, key);
         building.health = 100;
         building.isAlive = true;
 
+
+        this.anims.create
+            ({
+                key: key + '_onOff',
+                frames:
+                    [
+                        { key: key, frame: 0 },
+                        { key: key, frame: 1 },
+                        { key: key, frame: 2 },
+                        { key: key, frame: 3 },
+                    ],
+                frameRate: 1,
+                repeat: -1
+            });
+
         return building;
     }
-
 
     createGround(xPos, yPos, key, ground)
     {
