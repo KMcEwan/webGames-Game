@@ -5,7 +5,7 @@ var config =
     width: 600,
     height: 800, 
     scale:
-    {   parent: 'game',
+    {   parent: 'game',             // same id as div element in html
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
         // width: 600,
@@ -19,7 +19,7 @@ var config =
         default: 'arcade',
         arcade:
         {
-            debug: true,
+            debug: false,
             gravity: { y: 0 }
         }
     },
