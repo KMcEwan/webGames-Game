@@ -110,6 +110,7 @@ class mainGame extends Phaser.Scene
         this.combinedWinScore = 2050;
         this.thrustPlayingOne = false;
         this.thrustPlayingTwo = false;
+        this.deathAnimationRunning = false;
        
         // const gameMusic = this.sound.add("mainGameMusic");
         // gameMusic.play();
@@ -286,7 +287,7 @@ class mainGame extends Phaser.Scene
         {
             this.lifeLost.play();
             console.log(this.percent);
-            this.respawnPlayer1();  
+          
             player1.lives --;                     
             this.setPlayers1Lives();
           
@@ -303,21 +304,31 @@ class mainGame extends Phaser.Scene
                 player1.isAlive = false;
                 this.checkPlayersAlive();
             }
+
+            this.respawnPlayer1();  
         }
     }
 
     respawnPlayer1()
-    {      
+    {   
+        console.log(this.deathAnimationRunning);   
+        this.deathAnimationRunning = true;
         console.log("respawning function");
-        player1.anims.stop();
-        player1.once('animationcomplete', ()=> 
-        {
-           // player1.play('deathFlash', true);
-            console.log("respawn");         
-        })
+        //player1.anims.stop();
+        //player1.play('deathFlash', false);
+        //player1.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () =>  console.log("respawn"));
+       // player1.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => player1.play('deathFlash', true));
         player1.play('deathFlash', true)
-        player1.x = 200;
-        player1.y = 500;
+        player1.once('animationcomplete', ()=> 
+        {           
+            console.log("respawn");  
+            player1.x = 200;
+            player1.y = 500;       
+            this.deathAnimationRunning = false;
+            console.log(this.deathAnimationRunning);   
+        })
+
+    
     }
 
     drawPlayer1Health()
@@ -434,25 +445,32 @@ class mainGame extends Phaser.Scene
     /* UPDATE FUNCTION START */
     update()
     { 
-        if(this.inputKey.down.isDown)                                       //TESTING ONLY
+        /* DEBUGGING USE ONLY */
+        if(this.inputKey.down.isDown)                                       
         {
-            player1.score = 1000;
-            player2.score = 1000;
+            // player1.score = 1000;
+            // player2.score = 1000;
+            this.respawnPlayer1();  
         }
+        /* DEBUGGING USE ONLY END */
         
         this.playerOneScore.setText('score : ' + player1.score);
         this.playerTwoScore.setText('score : ' + player2.score);
 
-        if(this.aKey.isDown || this.dKey.isDown)
+        if(!this.deathAnimationRunning && this.aKey.isDown || !this.deathAnimationRunning && this.dKey.isDown)
         {
             this.movePlayer1();
         }
         else
         {
-            player1.setVelocityX(0);           
-            player1.play('player1Stationary');      
-            this.thrustPlayingOne = false;
-            this.thrustEffect.stop();
+            player1.setVelocityX(0);  
+            if(!this.deathAnimationRunning)         
+            {
+                player1.play('player1Stationary');      
+                this.thrustPlayingOne = false;
+                this.thrustEffect.stop();
+            }
+
         }
 
         if(this.inputKey.left.isDown || this.inputKey.right.isDown)
@@ -793,7 +811,7 @@ class mainGame extends Phaser.Scene
             [
                 { key: 'player1',frame:0 },
             ],
-            frameRate: 24,
+            frameRate: 1,
             repeat: 0
         }); 
         this.anims.create
@@ -833,9 +851,10 @@ class mainGame extends Phaser.Scene
             frames: 
             [
                 { key: 'player1',frame:6 },
+                { key: 'player1',frame:0 },
             ],
-            frameRate: 24,
-            repeat:-1
+            frameRate: 6,
+            repeat:2
         }); 
 
         //PLAYER 2
@@ -917,41 +936,6 @@ class mainGame extends Phaser.Scene
         return player;
     }
 
-    // createBuilding(xPos, yPos, key, building)
-    // {
-    //     building = this.physics.add.sprite(xPos, yPos, key);
-    //     building.health = 100;
-    //     building.isAlive = true;
-
-
-    //     this.anims.create
-    //     ({
-    //         key: 'onOff',
-    //         frames: 
-    //         [
-    //             { key: 'building1',frame:0 },
-    //             { key: 'building1',frame:1 },
-    //         ],
-    //         frameRate: 1,
-    //         repeat: -1
-    //     }); 
-
-    //     this.anims.create
-    //     ({
-    //         key: 'onOff2',
-    //         frames: 
-    //         [
-    //             { key: 'building2',frame:0 },
-    //             { key: 'building2',frame:1 },
-    //         ],
-    //         frameRate: 1,
-    //         repeat: -1
-    //     }); 
-
-
-
-    //     return building;
-    // }
 
     createBuilding(xPos, yPos, key) {
         let building = this.physics.add.sprite(xPos, yPos, key);
