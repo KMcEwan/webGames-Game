@@ -125,6 +125,8 @@ class mainGame extends Phaser.Scene
 
         this.inputKey = this.input.keyboard.createCursorKeys(); 
 
+        this.buildingCount = 6;
+
         ground = this.createGround(300, 796, 'ground', ground);
         topGround = this.createGround(300, 1, 'ground', topGround);
 
@@ -138,50 +140,43 @@ class mainGame extends Phaser.Scene
         player1.setSize(50, 40, true);
         player2.setSize(50, 40, true);
        
-        // building1 = this.createBuilding(43, 712, 'building1', building1);
-        // building1.setScale(2);
-        // building1.play('onOff');
-
-        // building2 = this.createBuilding(163, 712, 'building2', building2);
-        // building2.setScale(2);
-        // building2.play('onOff2');
-
         building1 = this.createBuilding(43, 712, 'building1');
         building1.setScale(2);
+        building1.setSize(43, 78, true);
         building1.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building1.setTexture('building1'))
         building1.play('building1_onOff');
 
 
         building2 = this.createBuilding(163, 712, 'building2');
         building2.setScale(2);
+        building2.setSize(77, 78, true);
         building2.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building2.setTexture('building2'))
         building2.play('building2_onOff');
 
         building3 = this.createBuilding(283, 712, 'building3');
         building3.setScale(2);
+        building3.setSize(43, 78, true);
         building3.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building3.setTexture('building3'))
         building3.play('building3_onOff');
 
         building4 = this.createBuilding(403, 712, 'building4');
         building4.setScale(2);
+        building4.setSize(77, 78, true);
         building4.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building4.setTexture('building4'))
         building4.play('building4_onOff');
         
         building5 = this.createBuilding(523, 712, 'building5');
         building5.setScale(2);
+        building5.setSize(77, 78, true);
         building5.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building5.setTexture('building5'))
         building5.play('building5_onOff');
 
         building6 = this.createBuilding(583, 712, 'building6');
         building6.setScale(2);
+        building6.setSize(77, 78, true);
         building6.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building5.setTexture('building6'))
         building6.play('building6_onOff');
 
-
-
-        // building2 = this.createBuilding(225, 700, 'building2', building2);
-        // building3 = this.createBuilding(375, 700, 'building3', building3);
-        // building4 = this.createBuilding(525, 700, 'building4', building4);
 
 
         //top = this.createGround(300, 796, 'ground', top);
@@ -197,6 +192,12 @@ class mainGame extends Phaser.Scene
         this.physics.add.overlap(ground, this.enemies, this.enemyOutOfScreen, null, this);
         this.physics.add.overlap(player2, this.enemies,  this.enemyHitPlayer, null, this);
         this.physics.add.overlap(player1, this.enemies,  this.enemyHitPlayer, null, this);
+        this.physics.add.overlap(building1, this.enemies, this.bulletHitBuilding, null, this);   
+        this.physics.add.overlap(building2, this.enemies, this.bulletHitBuilding, null, this);   
+        this.physics.add.overlap(building3, this.enemies, this.bulletHitBuilding, null, this);   
+        this.physics.add.overlap(building4, this.enemies, this.bulletHitBuilding, null, this);   
+        this.physics.add.overlap(building5, this.enemies, this.bulletHitBuilding, null, this);   
+        this.physics.add.overlap(building6, this.enemies, this.bulletHitBuilding, null, this);   
         
         this.player1Image = this.add.image(135,40, 'player1');
         this.player1Image.setScale(0.75)
@@ -247,6 +248,27 @@ class mainGame extends Phaser.Scene
         this.shotFreqTwo = 300;
     };
 
+    bulletHitBuilding(building, enemy)
+    {
+        enemy.body.setEnable(false);
+        this.explosionSound.play();
+        this.enemyCount--;
+        enemy.play('destroyEnemy', true)
+        enemy.once('animationcomplete', ()=> 
+        {
+            this.explosionSound.stop();
+            enemy.destroy(); 
+        })
+        if(building.health > 0)
+        {
+            building.health -= 10;
+        }
+        else
+        {
+            console.log("BUILDING DESTROYED");
+            // DESTROY BUILDING
+        }
+    }
     setHealthbarPlayerOne()
     {
         this.width = 100;
