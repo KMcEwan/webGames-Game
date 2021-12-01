@@ -16,7 +16,7 @@ class loader extends Phaser.Scene
        // this.load.image('building2', '../assets/building/building2.png');
         //this.load.image('building3', '../assets/building/building3.png');
        // this.load.image('building4', '../assets/building/building4.png');
-        this.load.image('building5', '../assets/building/building5.png');
+        //this.load.image('building5', '../assets/building/building5.png');
         this.load.image('ground', '../assets/environment/ground2.png');
         this.load.image('heartFull', '../assets/UI/fullHeart.png');
         this.load.image('heartEmpty', '../assets/UI/emptyHeart.png');
@@ -39,6 +39,7 @@ class loader extends Phaser.Scene
         this.load.spritesheet('building2', '../assets/building/buildingTwoSheet.png', { frameWidth: 77, frameHeight: 88 });
         this.load.spritesheet('building3', '../assets/building/buildingThreeSheet.png', { frameWidth: 43, frameHeight: 88 });
         this.load.spritesheet('building4', '../assets/building/buildingFourSheet.png', { frameWidth: 77, frameHeight: 88 });
+        this.load.spritesheet('building5', '../assets/building/buildingFiveSheet.png', { frameWidth: 43, frameHeight: 88 });
      
         /* AUDIO - MUSIC */
         this.load.audio("titleMusic", '../assets/Audio/music/music1.mp3');
