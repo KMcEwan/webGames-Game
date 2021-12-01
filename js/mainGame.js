@@ -111,6 +111,7 @@ class mainGame extends Phaser.Scene
         this.thrustPlayingOne = false;
         this.thrustPlayingTwo = false;
         this.deathAnimationRunning = false;
+        this.deathAnimationRunning2 = false;
        
         // const gameMusic = this.sound.add("mainGameMusic");
         // gameMusic.play();
@@ -314,10 +315,7 @@ class mainGame extends Phaser.Scene
         console.log(this.deathAnimationRunning);   
         this.deathAnimationRunning = true;
         console.log("respawning function");
-        //player1.anims.stop();
-        //player1.play('deathFlash', false);
-        //player1.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () =>  console.log("respawn"));
-       // player1.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => player1.play('deathFlash', true));
+
         player1.play('deathFlash', true)
         player1.once('animationcomplete', ()=> 
         {           
@@ -473,16 +471,19 @@ class mainGame extends Phaser.Scene
 
         }
 
-        if(this.inputKey.left.isDown || this.inputKey.right.isDown)
+        if(!this.deathAnimationRunning2 && this.inputKey.left.isDown || !this.deathAnimationRunning2 && this.inputKey.right.isDown)
         {
             this.movePlayer2();
         }
         else
         {
             player2.setVelocityX(0);
-            player2.play('player2Stationary');
-            this.thrustPlayingTwo = false;
-            this.thrustEffect2.stop();
+            if(!this.deathAnimationRunning2)         
+            {
+                player2.play('player2Stationary');
+                this.thrustPlayingTwo = false;
+                this.thrustEffect2.stop();
+            }
         }
 
 
@@ -919,6 +920,17 @@ class mainGame extends Phaser.Scene
             ],
             frameRate: 24,
             repeat: 0
+        }); 
+        this.anims.create
+        ({
+            key: 'deathFlash2',
+            frames: 
+            [
+                { key: 'player2',frame:6 },
+                { key: 'player2',frame:0 },
+            ],
+            frameRate: 6,
+            repeat:2
         }); 
 
         this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
