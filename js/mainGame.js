@@ -172,6 +172,11 @@ class mainGame extends Phaser.Scene
         building5.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building5.setTexture('building5'))
         building5.play('building5_onOff');
 
+        building6 = this.createBuilding(583, 712, 'building6');
+        building6.setScale(2);
+        building6.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building5.setTexture('building6'))
+        building6.play('building6_onOff');
+
 
 
         // building2 = this.createBuilding(225, 700, 'building2', building2);

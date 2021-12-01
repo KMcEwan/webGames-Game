@@ -19,7 +19,7 @@ var config =
         default: 'arcade',
         arcade:
         {
-            debug: true,
+            debug: false,
             gravity: { y: 0 }
         }
     },
@@ -34,6 +34,7 @@ building2,
 building3,
 building4,
 building5,
+building6,
 ground,
 topGround,
 game = new Phaser.Game(config);

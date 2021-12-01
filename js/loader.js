@@ -40,6 +40,8 @@ class loader extends Phaser.Scene
         this.load.spritesheet('building3', '../assets/building/buildingThreeSheet.png', { frameWidth: 43, frameHeight: 88 });
         this.load.spritesheet('building4', '../assets/building/buildingFourSheet.png', { frameWidth: 77, frameHeight: 88 });
         this.load.spritesheet('building5', '../assets/building/buildingFiveSheet.png', { frameWidth: 43, frameHeight: 88 });
+        this.load.spritesheet('building6', '../assets/building/buildingSixSheet.png', { frameWidth: 17, frameHeight: 88 });
+     
      
         /* AUDIO - MUSIC */
         this.load.audio("titleMusic", '../assets/Audio/music/music1.mp3');
