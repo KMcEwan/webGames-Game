@@ -112,6 +112,7 @@ class mainGame extends Phaser.Scene
         this.thrustPlayingTwo = false;
         this.deathAnimationRunning = false;
         this.deathAnimationRunning2 = false;
+        this.destroyPlayer2 = false;
        
         // const gameMusic = this.sound.add("mainGameMusic");
         // gameMusic.play();
@@ -138,7 +139,7 @@ class mainGame extends Phaser.Scene
   
  
         player1 = this.createPlayer(200, 500, 'player1', player1);
-        player2 = this.createPlayer(600, 500, 'player2', player2);
+        player2 = this.createPlayer(400, 500, 'player2', player2);
         player1.setSize(50, 40, true);
         player2.setSize(50, 40, true);
        
@@ -315,7 +316,6 @@ class mainGame extends Phaser.Scene
         console.log(this.deathAnimationRunning);   
         this.deathAnimationRunning = true;
         console.log("respawning function");
-
         player1.play('deathFlash', true)
         player1.once('animationcomplete', ()=> 
         {           
@@ -369,7 +369,6 @@ class mainGame extends Phaser.Scene
         this.graphicsPlayerTwoHealth.clear();
         this.graphicsPlayerTwoHealth.fillStyle(0x808080);
         this.graphicsPlayerTwoHealth.fillRoundedRect(455, 40, this.width, 10, 5);
-       // console.log("player lives : " , player2.lives);
  
         if(this.percent >= .1)
         {
@@ -379,22 +378,52 @@ class mainGame extends Phaser.Scene
         {
             player2.lives --;
             this.setPlayers2Lives();
-     
+          
             if(player2.lives > 0)
             {
                 player2.health = 100;                
                 this.percent = Phaser.Math.Clamp(player2.health, 0, 100) / 100;
-              //  console.log("player lives : " , player2.lives);
                 this.drawPlayer2Health();
             }
             else
             {
-                // this.scene.start("gameOverKey");
-                // this.game.sound.stopAll();
+                console.log("DEAD");
                 player2.isAlive = false;
+                this.destroyPlayer1();
                 this.checkPlayersAlive();
             }
+
+           // this.respawnPlayer2();  
+            
         }
+    }
+
+    destroyPlayer1()
+    {
+        player2.play('dead', true)
+        player2.once('animationcomplete', ()=> 
+        {
+           console.log("TEST ANIMATIONS");
+            //player2.destroy(); 
+        })
+    }
+
+    respawnPlayer2()
+    {   
+        //console.log(this.deathAnimationRunning2);   
+        this.deathAnimationRunning2 = true;
+        //console.log("respawning function");
+        player2.play('deathFlash2', true)
+        player2.once('animationcomplete', ()=> 
+        {           
+            console.log("respawn");  
+            player2.x = 400;
+            player2.y = 500;       
+            this.deathAnimationRunning2 = false;
+           // console.log(this.deathAnimationRunning2);   
+        })
+
+    
     }
 
     drawPlayer2Health()
@@ -448,7 +477,9 @@ class mainGame extends Phaser.Scene
         {
             // player1.score = 1000;
             // player2.score = 1000;
-            this.respawnPlayer1();  
+            //this.respawnPlayer1();  
+            //player2.health -= 10;
+            this.destroyPlayer1();
         }
         /* DEBUGGING USE ONLY END */
         
@@ -478,7 +509,7 @@ class mainGame extends Phaser.Scene
         else
         {
             player2.setVelocityX(0);
-            if(!this.deathAnimationRunning2)         
+            if(!this.deathAnimationRunning2 || !this.destroyPlayer2)         
             {
                 player2.play('player2Stationary');
                 this.thrustPlayingTwo = false;
@@ -685,7 +716,7 @@ class mainGame extends Phaser.Scene
     {
         if(Phaser.Input.Keyboard.JustDown(this.specialAbility2))
         {
-            console.log("special attack");
+           // console.log("special attack");
             if(player2.score >= this.specialAttack)
             {
                 this.DefenceLaser = this.createDefenceLaser(300, 800, 'laserDefence', this.DefenceLaser);
@@ -755,7 +786,7 @@ class mainGame extends Phaser.Scene
             player2.setVelocityX(-this.playerVelocity);
             player2.play('player2MoveLeft');
             if (this.thrustPlayingTwo !== true) {
-                console.log(" THRUST TEST")
+               // console.log(" THRUST TEST")
                 this.thrustEffect2.play();
                 this.thrustPlayingTwo = true;
             }           
@@ -766,7 +797,7 @@ class mainGame extends Phaser.Scene
             player2.setVelocityX(this.playerVelocity);
             player2.play('player2MoveRight');
             if (this.thrustPlayingTwo !== true) {
-                console.log(" THRUST TEST")
+               // console.log(" THRUST TEST")
                 this.thrustEffect2.play();
                 this.thrustPlayingTwo = true;
             }           
@@ -858,6 +889,8 @@ class mainGame extends Phaser.Scene
             repeat:2
         }); 
 
+       
+
         //PLAYER 2
         this.anims.create
        ({
@@ -932,6 +965,23 @@ class mainGame extends Phaser.Scene
             frameRate: 6,
             repeat:2
         }); 
+
+        // this.anims.create
+        // ({
+        //     key: 'dead',
+        //     frames: 
+        //     [
+        //         { key: 'player2',frame:7 },
+        //         { key: 'player2',frame:8 },
+        //         { key: 'player2',frame:9 },
+        //         { key: 'player2',frame:10 },
+        //         { key: 'player2',frame:11 },
+        //         { key: 'player2',frame:12 },
+        //         { key: 'player2',frame:13 },
+        //     ],
+        //     frameRate: 7,
+        //     repeat:0
+        // }); 
 
         this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
         this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
