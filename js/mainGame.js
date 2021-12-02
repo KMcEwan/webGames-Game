@@ -305,11 +305,31 @@ class mainGame extends Phaser.Scene
             else
             {
                 player1.isAlive = false;
+                this.destroyPlayer1();
                 this.checkPlayersAlive();
             }
 
-            this.respawnPlayer1();  
+            if(!this.destroyAnimationRunning)
+            {
+                this.respawnPlayer1();  
+            }
         }
+    }
+
+    destroyPlayer1()
+    {
+        console.log("Destroy enemy 1");
+        this.destroyAnimationRunning = true;
+        player1.play('dead2', true)
+        player1.once('animationcomplete', ()=> 
+        {
+           console.log("TEST ANIMATIONS");
+            //player2.destroy(); 
+            this.destroyAnimationRunning = false;
+            player1.setActive(false).setVisible(false);
+            player1.body.setEnable(false);
+        })
+        
     }
 
     respawnPlayer1()
@@ -407,7 +427,7 @@ class mainGame extends Phaser.Scene
     {
         console.log("Destroy enemy 2");
         this.destroyAnimationRunning2 = true;
-        player2.play('dead', true)
+        player2.play('dead2', true)
         player2.once('animationcomplete', ()=> 
         {
            console.log("TEST ANIMATIONS");
@@ -497,14 +517,14 @@ class mainGame extends Phaser.Scene
         this.playerOneScore.setText('score : ' + player1.score);
         this.playerTwoScore.setText('score : ' + player2.score);
 
-        if(!this.deathAnimationRunning && this.aKey.isDown || !this.deathAnimationRunning && this.dKey.isDown)
+        if(!this.deathAnimationRunning && !this.destroyAnimationRunning && this.aKey.isDown || !this.deathAnimationRunning && !this.destroyAnimationRunning && this.dKey.isDown)
         {
             this.movePlayer1();
         }
         else
         {
             player1.setVelocityX(0);  
-            if(!this.deathAnimationRunning)         
+            if(!this.deathAnimationRunning && !this.destroyAnimationRunning)         
             {
                 player1.play('player1Stationary');      
                 this.thrustPlayingOne = false;
@@ -513,7 +533,7 @@ class mainGame extends Phaser.Scene
 
         }
 
-        if(!this.deathAnimationRunning2 && this.inputKey.left.isDown || !this.deathAnimationRunning2 && this.inputKey.right.isDown)
+        if(!this.deathAnimationRunning2 && !this.destroyAnimationRunning2 && this.inputKey.left.isDown || !this.deathAnimationRunning2 && !this.destroyAnimationRunning2 && this.inputKey.right.isDown)
         {
             this.movePlayer2();
         }
@@ -551,7 +571,7 @@ class mainGame extends Phaser.Scene
             }
             player1.play('fireRight1');
         }
-        else if (this.fireSpcace.isDown)
+        else if (this.fireSpcace.isDown && player1.isAlive)
         {
             var currentTime = new Date().getTime();
             if (currentTime - this.lastFiredOne > this.shotFreqOne) {
@@ -900,7 +920,22 @@ class mainGame extends Phaser.Scene
             repeat:2
         }); 
 
-       
+        this.anims.create
+        ({
+            key: 'dead',
+            frames: 
+            [
+                { key: 'player1',frame:7 },
+                { key: 'player1',frame:8 },
+                { key: 'player1',frame:9 },
+                { key: 'player1',frame:10 },
+                { key: 'player1',frame:11 },
+                { key: 'player1',frame:12 },
+                { key: 'player1',frame:13 },
+            ],
+            frameRate: 7,
+            repeat:0
+        }); 
 
         //PLAYER 2
         this.anims.create
@@ -979,7 +1014,7 @@ class mainGame extends Phaser.Scene
 
         this.anims.create
         ({
-            key: 'dead',
+            key: 'dead2',
             frames: 
             [
                 { key: 'player2',frame:7 },

@@ -20,7 +20,7 @@ class loader extends Phaser.Scene
 
         /* SPRITE SHEETS OF SCENE PLAYERS*/
         this.load.spritesheet('enemy', '../assets/enemy/enemySheetTest.png', { frameWidth: 20, frameHeight: 20 });
-        this.load.spritesheet('player1', '../assets/playerAssets/pinkPlayerSheet.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player1', '../assets/playerAssets/pinkPlayerSheet2.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player2', '../assets/playerAssets/bluePlayerSheet2.png', { frameWidth: 64, frameHeight: 64 });
 
 
