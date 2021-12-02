@@ -114,6 +114,7 @@ class mainGame extends Phaser.Scene
         this.deathAnimationRunning2 = false;
         this.destroyAnimationRunning = false;
         this.destroyAnimationRunning2 = false;
+        this.buildingName;
        
         // const gameMusic = this.sound.add("mainGameMusic");
         // gameMusic.play();
@@ -148,38 +149,38 @@ class mainGame extends Phaser.Scene
         building1.setScale(2);
         building1.setSize(43, 78, true);
         building1.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building1.setTexture('building1'))
-        building1.play('building1_onOff');
+        building1.play('building1OnOff');
 
 
         building2 = this.createBuilding(163, 712, 'building2');
         building2.setScale(2);
         building2.setSize(77, 78, true);
         building2.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building2.setTexture('building2'))
-        building2.play('building2_onOff');
+        building2.play('building2OnOff');
 
         building3 = this.createBuilding(283, 712, 'building3');
         building3.setScale(2);
         building3.setSize(43, 78, true);
         building3.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building3.setTexture('building3'))
-        building3.play('building3_onOff');
+        building3.play('building3OnOff');
 
         building4 = this.createBuilding(403, 712, 'building4');
         building4.setScale(2);
         building4.setSize(77, 78, true);
         building4.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building4.setTexture('building4'))
-        building4.play('building4_onOff');
+        building4.play('building4OnOff');
         
         building5 = this.createBuilding(523, 712, 'building5');
         building5.setScale(2);
-        building5.setSize(77, 78, true);
+        building5.setSize(43, 78, true);
         building5.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building5.setTexture('building5'))
-        building5.play('building5_onOff');
+        building5.play('building5OnOff');
 
         building6 = this.createBuilding(583, 712, 'building6');
         building6.setScale(2);
-        building6.setSize(77, 78, true);
-        building6.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building5.setTexture('building6'))
-        building6.play('building6_onOff');
+        building6.setSize(17, 78, true);
+        building6.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => building6.setTexture('building6'))
+        building6.play('building6OnOff');
 
 
 
@@ -269,7 +270,59 @@ class mainGame extends Phaser.Scene
         }
         else
         {
+           
+            if(building == building1)
+            {
+                this.buildingName = "building1destroyBuilding";
+                building.body.setEnable(false);
+            }
+            else if (building == building2)
+            {
+                this.buildingName = "building2destroyBuilding";
+                building.body.setEnable(false);
+            }
+            else if (building == building3)
+            {
+                this.buildingName = "building3destroyBuilding";
+                building.body.setEnable(false);
+            }
+            else if (building == building4)
+            {
+                this.buildingName = "building4destroyBuilding";
+                building.body.setEnable(false);
+            }
+            else if (building == building5)
+            {
+                this.buildingName = "building5destroyBuilding";
+                building.body.setEnable(false);
+            }
+            else
+            {
+                this.buildingName = "building6destroyBuilding";
+                //building.body.setEnable(false);
+            }
+
+           // building.setActive(false).setVisible(false);
+            
+
+
+           // building.anims.stop();
             console.log("BUILDING DESTROYED");
+            building.play(this.buildingName, true)
+            building.once('animationcomplete', ()=> 
+            {
+                //this.explosionSound.stop();
+                building.destroy(); 
+                this.buildingCount--;
+            })
+
+            if(this.buildingCount <= 0)
+            {
+                this.scene.start("gameOverKey", player1, player2);
+                this.game.sound.stopAll();
+            }
+
+            
             // DESTROY BUILDING
         }
     }
@@ -508,9 +561,18 @@ class mainGame extends Phaser.Scene
         {
             // player1.score = 1000;
              player2.score = 1000;
-            //this.respawnPlayer1();  
+           
             //player2.health -= 10;
             //this.destroyPlayer2();
+           // building6.health -= 10;
+            this.enemy = new Enemy(this, 590, 0, 'enemy');
+            this.enemy.play('flash');
+            this.add.existing(this.enemy);
+            this.enemies.add(this.enemy);
+            this.enemy.setVelocityY(50);
+            this.enemies2.push(this.enemy);
+            this.enemyCount++;
+            
         }
         /* DEBUGGING USE ONLY END */
         
@@ -1053,7 +1115,7 @@ class mainGame extends Phaser.Scene
 
         this.anims.create
             ({
-                key: key + '_onOff',
+                key: key + 'OnOff',
                 frames:
                     [
                         { key: key, frame: 0 },
@@ -1063,6 +1125,24 @@ class mainGame extends Phaser.Scene
                     ],
                 frameRate: 1,
                 repeat: -1
+            });
+
+            this.anims.create
+            ({
+                key: key + 'destroyBuilding',
+                frames:
+                    [
+                        { key: key, frame: 4 },
+                        { key: key, frame: 5 },
+                        { key: key, frame: 6 },
+                        { key: key, frame: 7 },
+                        { key: key, frame: 8 },
+                        { key: key, frame: 9 },
+
+
+                    ],
+                frameRate: 3,
+                repeat: 0
             });
 
         return building;

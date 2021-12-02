@@ -29,12 +29,12 @@ class loader extends Phaser.Scene
         this.load.spritesheet('background', '../assets/environment/backgroundAnim.png', { frameWidth: 600, frameHeight: 800 });
 
 
-        this.load.spritesheet('building1', '../assets/building/buildingOneSheet.png', { frameWidth: 43, frameHeight: 88 });
-        this.load.spritesheet('building2', '../assets/building/buildingTwoSheet.png', { frameWidth: 77, frameHeight: 88 });
-        this.load.spritesheet('building3', '../assets/building/buildingThreeSheet2.png', { frameWidth: 43, frameHeight: 88 });
-        this.load.spritesheet('building4', '../assets/building/buildingFourSheet.png', { frameWidth: 77, frameHeight: 88 });
-        this.load.spritesheet('building5', '../assets/building/buildingFiveSheet.png', { frameWidth: 43, frameHeight: 88 });
-        this.load.spritesheet('building6', '../assets/building/buildingSixSheet.png', { frameWidth: 17, frameHeight: 88 });
+        this.load.spritesheet('building1', '../assets/building/building1.png', { frameWidth: 43, frameHeight: 88 });
+        this.load.spritesheet('building2', '../assets/building/building2.png', { frameWidth: 77, frameHeight: 88 });
+        this.load.spritesheet('building3', '../assets/building/building3.png', { frameWidth: 43, frameHeight: 88 });
+        this.load.spritesheet('building4', '../assets/building/building4.png', { frameWidth: 77, frameHeight: 88 });
+        this.load.spritesheet('building5', '../assets/building/building5.png', { frameWidth: 43, frameHeight: 88 });
+        this.load.spritesheet('building6', '../assets/building/building6.png', { frameWidth: 17, frameHeight: 88 });
      
      
         /* AUDIO - MUSIC */
