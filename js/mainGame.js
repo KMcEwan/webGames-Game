@@ -112,7 +112,8 @@ class mainGame extends Phaser.Scene
         this.thrustPlayingTwo = false;
         this.deathAnimationRunning = false;
         this.deathAnimationRunning2 = false;
-        this.destroyPlayer2 = false;
+        this.destroyAnimationRunning = false;
+        this.destroyAnimationRunning2 = false;
        
         // const gameMusic = this.sound.add("mainGameMusic");
         // gameMusic.play();
@@ -389,23 +390,33 @@ class mainGame extends Phaser.Scene
             {
                 console.log("DEAD");
                 player2.isAlive = false;
-                this.destroyPlayer1();
+                this.destroyPlayer2();
                 this.checkPlayersAlive();
             }
 
-           // this.respawnPlayer2();  
+            if(!this.destroyAnimationRunning2)
+            {
+                this.respawnPlayer2();  
+            }
+           
             
         }
     }
 
-    destroyPlayer1()
+    destroyPlayer2()
     {
+        console.log("Destroy enemy 2");
+        this.destroyAnimationRunning2 = true;
         player2.play('dead', true)
         player2.once('animationcomplete', ()=> 
         {
            console.log("TEST ANIMATIONS");
             //player2.destroy(); 
+            this.destroyAnimationRunning2 = false;
+            player2.setActive(false).setVisible(false);
+            player2.body.setEnable(false);
         })
+        
     }
 
     respawnPlayer2()
@@ -476,10 +487,10 @@ class mainGame extends Phaser.Scene
         if(this.inputKey.down.isDown)                                       
         {
             // player1.score = 1000;
-            // player2.score = 1000;
+             player2.score = 1000;
             //this.respawnPlayer1();  
             //player2.health -= 10;
-            this.destroyPlayer1();
+            //this.destroyPlayer2();
         }
         /* DEBUGGING USE ONLY END */
         
@@ -509,7 +520,7 @@ class mainGame extends Phaser.Scene
         else
         {
             player2.setVelocityX(0);
-            if(!this.deathAnimationRunning2 || !this.destroyPlayer2)         
+            if(!this.deathAnimationRunning2 && !this.destroyAnimationRunning2)         
             {
                 player2.play('player2Stationary');
                 this.thrustPlayingTwo = false;
@@ -551,7 +562,7 @@ class mainGame extends Phaser.Scene
             player1.play('fireStationary1');
         }
 
-        if(this.inputKey.up.isDown)
+        if(this.inputKey.up.isDown && player2.isAlive)
         {
             // var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2', player2);        
             var currentTime = new Date().getTime();
@@ -966,22 +977,22 @@ class mainGame extends Phaser.Scene
             repeat:2
         }); 
 
-        // this.anims.create
-        // ({
-        //     key: 'dead',
-        //     frames: 
-        //     [
-        //         { key: 'player2',frame:7 },
-        //         { key: 'player2',frame:8 },
-        //         { key: 'player2',frame:9 },
-        //         { key: 'player2',frame:10 },
-        //         { key: 'player2',frame:11 },
-        //         { key: 'player2',frame:12 },
-        //         { key: 'player2',frame:13 },
-        //     ],
-        //     frameRate: 7,
-        //     repeat:0
-        // }); 
+        this.anims.create
+        ({
+            key: 'dead',
+            frames: 
+            [
+                { key: 'player2',frame:7 },
+                { key: 'player2',frame:8 },
+                { key: 'player2',frame:9 },
+                { key: 'player2',frame:10 },
+                { key: 'player2',frame:11 },
+                { key: 'player2',frame:12 },
+                { key: 'player2',frame:13 },
+            ],
+            frameRate: 7,
+            repeat:0
+        }); 
 
         this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
         this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
