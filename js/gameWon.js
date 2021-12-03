@@ -14,6 +14,10 @@ class gameWon extends Phaser.Scene
     {
         this.backgroundSun = this.add.image(300,400, 'backgroundSun');
         this.add.image(300, 400, 'background');  
+
+        this.gameWon = this.add.text (config.width / 2 - 170, config.height / 2 - 300, 'GAME WON', { font: '56px CustomFont', fill: '#e357ff' });
+
+
         this.playerOneScore = this.add.text (config.width / 2 - 200, config.height / 2 + 50, 'P1 score : 0', { font: '48px CustomFont', fill: '#e357ff' });
         this.playerTwoScore = this.add.text (config.width / 2 - 200, config.height / 2 + 130, 'P2 score : 0', {font: '48px CustomFont', fill: '#0377fc'});
 

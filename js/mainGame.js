@@ -104,10 +104,10 @@ class mainGame extends Phaser.Scene
         this.scoreForHealSelf = 200;
         this.scoreForHealBoth = 300;
       //  this.specialAbility1 = 300;
-        this.gainLives = 500;
-        this.specialAttack = 500;
+        this.gainLives = 600;
+        this.specialAttack = 600;
         this.playerVelocity = 200;
-        this.combinedWinScore = 2050;
+        this.combinedWinScore = 2500;
         this.thrustPlayingOne = false;
         this.thrustPlayingTwo = false;
         this.deathAnimationRunning = false;
@@ -316,11 +316,7 @@ class mainGame extends Phaser.Scene
                 this.buildingCount--;
             })
 
-            if(this.buildingCount <= 0)
-            {
-                this.scene.start("gameOverKey", player1, player2);
-                this.game.sound.stopAll();
-            }
+          
 
             
             // DESTROY BUILDING
@@ -556,23 +552,20 @@ class mainGame extends Phaser.Scene
     /* UPDATE FUNCTION START */
     update()
     { 
+
+        if(this.buildingCount <= 0)
+        {
+            this.scene.start("gameOverKey", player1, player2);
+            this.game.sound.stopAll();
+        }
         /* DEBUGGING USE ONLY */
         if(this.inputKey.down.isDown)                                       
         {
             // player1.score = 1000;
-             player2.score = 1000;
-           
+             player2.score = 1000;     
+             player1.score = 1000;           
             //player2.health -= 10;
-            //this.destroyPlayer2();
-           // building6.health -= 10;
-            this.enemy = new Enemy(this, 590, 0, 'enemy');
-            this.enemy.play('flash');
-            this.add.existing(this.enemy);
-            this.enemies.add(this.enemy);
-            this.enemy.setVelocityY(50);
-            this.enemies2.push(this.enemy);
-            this.enemyCount++;
-            
+           // this.scene.start("gameWonKey", player1, player2);
         }
         /* DEBUGGING USE ONLY END */
         
@@ -611,8 +604,8 @@ class mainGame extends Phaser.Scene
         }
 
 
-
-        if(this.fireSpcace.isDown && this.aKey.isDown)
+        // PLAYER 1 FIRING
+        if(this.Wkey.isDown && this.aKey.isDown)
         {
             var currentTime = new Date().getTime();
             if (currentTime - this.lastFiredOne > this.shotFreqOne) {
@@ -623,7 +616,7 @@ class mainGame extends Phaser.Scene
             }
             player1.play('fireLeft1');
         }
-        else if (this.fireSpcace.isDown && this.dKey.isDown)
+        else if (this.Wkey.isDown && this.dKey.isDown)
         {
             var currentTime = new Date().getTime();
             if (currentTime - this.lastFiredOne > this.shotFreqOne) {
@@ -633,7 +626,7 @@ class mainGame extends Phaser.Scene
             }
             player1.play('fireRight1');
         }
-        else if (this.fireSpcace.isDown && player1.isAlive)
+        else if (this.Wkey.isDown && player1.isAlive)
         {
             var currentTime = new Date().getTime();
             if (currentTime - this.lastFiredOne > this.shotFreqOne) {
@@ -644,9 +637,32 @@ class mainGame extends Phaser.Scene
             player1.play('fireStationary1');
         }
 
+
+        //PLAYER 2 FIRING
+        if(this.inputKey.up.isDown && this.inputKey.left.isDown)
+        {
+            var currentTime = new Date().getTime();
+            if (currentTime - this.lastFiredOne > this.shotFreqOne) {
+                this.laserEffect.play();
+                var canLaser = new cannonLaser(this, player2.x, player2.y - 40, 'laser2', player2);
+                this.lastFiredOne = currentTime;
+               
+            }
+            player2.play('fireLeft2');
+        }
+        else if (this.inputKey.up.isDown && this.inputKey.right.isDown)
+        {
+            var currentTime = new Date().getTime();
+            if (currentTime - this.lastFiredOne > this.shotFreqOne) {
+                this.laserEffect.play();
+                var canLaser = new cannonLaser(this, player2.x, player2.y - 40, 'laser2', player2);
+                this.lastFiredOne = currentTime;               
+            }
+            player2.play('fireRight2');
+        }
+        else
         if(this.inputKey.up.isDown && player2.isAlive)
         {
-            // var canLaser = new cannonLaser(this, player2.x, player2.y, 'laser2', player2);        
             var currentTime = new Date().getTime();
             if (currentTime - this.lastFiredTwo > this.shotFreqTwo) {
                 this.laserEffect.play();
@@ -654,7 +670,7 @@ class mainGame extends Phaser.Scene
                 this.lastFiredTwo = currentTime;
                
             }
-            player1.play('fireLeft1'); 
+            player2.play('fireStationary2'); 
         }  
 
         if(this.specialAbility1.isDown || this.healBoth.isDown || this.healSelf.isDown)
@@ -704,7 +720,6 @@ class mainGame extends Phaser.Scene
         if(this.maxScore >= 0 && this.maxScore < 300)
         {
             this.enemiesInScene = this.firstWave - this.enemyCount;         
-            //console.log("FIRST WAVE");
             for (let k = 0; k < this.enemiesInScene; k++) 
             {
                 let x = Phaser.Math.Between(580, 20);   
@@ -722,7 +737,6 @@ class mainGame extends Phaser.Scene
         if(this.maxScore > 300 && this.maxScore < 600)
         {
             this.enemiesInScene = this.secondWave - this.enemyCount;   
-           // console.log("SECOND WAVE");
             for (let k = 0; k < this.enemiesInScene; k++) 
             {
                 let x = Phaser.Math.Between(580, 20);   
@@ -740,7 +754,6 @@ class mainGame extends Phaser.Scene
         if(this.maxScore > 600)
         {
             this.enemiesInScene = this.thirdWave - this.enemyCount;   
-            //console.log("THIRD WAVE");
             for (let k = 0; k < this.enemiesInScene; k++) 
             {
                 let x = Phaser.Math.Between(580, 20);   
@@ -1093,7 +1106,7 @@ class mainGame extends Phaser.Scene
 
         this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);    
         this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.fireSpcace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.Wkey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.specialAbility1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         this.healSelf = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         this.healBoth = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);

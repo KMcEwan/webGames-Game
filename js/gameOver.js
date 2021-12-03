@@ -16,6 +16,8 @@ class gameOver extends Phaser.Scene
         this.add.image(300, 400, 'background');  
         console.log("controls script");
 
+        this.gameOver = this.add.text (config.width / 2 - 170, config.height / 2 - 300, 'GAME OVER', { font: '56px CustomFont', fill: '#e357ff' });
+
         this.playerOneScore = this.add.text (config.width / 2 - 200, config.height / 2 + 50, 'P1 score : 0', { font: '48px CustomFont', fill: '#e357ff' });
         this.playerTwoScore = this.add.text (config.width / 2 - 200, config.height / 2 + 130, 'P2 score : 0', {font: '48px CustomFont', fill: '#0377fc'});
 
