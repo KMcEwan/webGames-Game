@@ -118,6 +118,7 @@ class mainGame extends Phaser.Scene
        
         const gameMusic = this.sound.add("mainGameMusic",{volume: 0.4});
         //gameMusic.play();
+        this.sound.play("mainGameMusic");
 
         this.thrustEffect = this.sound.add("thrust", {volume: 0.3});
         this.thrustEffect2 = this.sound.add("thrust", {volume: 0.3});                                               // Keep two audios, needed so one doesnt switch the other off.
@@ -268,7 +269,7 @@ class mainGame extends Phaser.Scene
         enemy.once('animationcomplete', ()=> 
         {
            // this.explosionSound.stop();
-           this.sound.play("enemyExplosion", {volume: 0.05});
+           //this.sound.play("enemyExplosion", {volume: 0.05});
             enemy.destroy(); 
         })
         if(building.health > 0)
@@ -315,7 +316,7 @@ class mainGame extends Phaser.Scene
 
            // building.anims.stop();
             console.log("BUILDING DESTROYED");
-           
+            this.sound.play("buildingExplosion", {volume: 0.5});
             building.play(this.buildingName, true)
             building.once('animationcomplete', ()=> 
             {
@@ -710,7 +711,6 @@ class mainGame extends Phaser.Scene
 
     enemyOutOfScreen(ground, enemy)
     {
-        this.sound.play("enemyExplosion", {volume: 0.05});
         enemy.play('destroyEnemy')
         enemy.destroy(true);        
         this.enemyCount--;
