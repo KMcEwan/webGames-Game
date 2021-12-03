@@ -58,11 +58,11 @@ class cannonLaser extends Phaser.Physics.Arcade.Sprite {
     {     
         laser.destroy(true);
         enemy.body.setEnable(false);
-        this.scene.explosionSound.play();
+        this.scene.sound.play("enemyExplosion", {volume: 0.05});
         enemy.play('destroyEnemy', true)
         enemy.once('animationcomplete', ()=> 
         {
-            this.scene.explosionSound.stop();
+            //this.scene.explosionSound.stop();
             enemy.destroy();
  
         })
@@ -116,17 +116,23 @@ class mainGame extends Phaser.Scene
         this.destroyAnimationRunning2 = false;
         this.buildingName;
        
-        // const gameMusic = this.sound.add("mainGameMusic");
-        // gameMusic.play();
+        const gameMusic = this.sound.add("mainGameMusic",{volume: 0.4});
+        //gameMusic.play();
 
-        this.thrustEffect = this.sound.add("thrust");
-        this.thrustEffect2 = this.sound.add("thrust");                                               // Keep two audios, needed so one doesnt switch the other off.
-        this.explosionSound = this.sound.add("enemyExplosion");
-        this.laserEffect = this.sound.add("laserFire", {volume: 0.5});
+        this.thrustEffect = this.sound.add("thrust", {volume: 0.3});
+        this.thrustEffect2 = this.sound.add("thrust", {volume: 0.3});                                               // Keep two audios, needed so one doesnt switch the other off.
+        this.explosionSound = this.sound.add("enemyExplosion", {volume: 0.3});
+        
+ 
+     
+        this.laserEffect = this.sound.add("laserFire", {volume: 0.3});
         this.specialLaserBeam = this.sound.add("specialLaserBeam");
         this.lifeLost = this.sound.add("lifeLost");
         this.gainLife = this.sound.add("gainLife");
         this.gainHealth = this.sound.add("gainHealth");
+        this.playerExplosion = this.sound.add("playerExplosion");
+
+        
 
         this.inputKey = this.input.keyboard.createCursorKeys(); 
 
@@ -256,12 +262,13 @@ class mainGame extends Phaser.Scene
     bulletHitBuilding(building, enemy)
     {
         enemy.body.setEnable(false);
-        this.explosionSound.play();
+        this.sound.play("enemyExplosion", {volume: 0.05});
         this.enemyCount--;
         enemy.play('destroyEnemy', true)
         enemy.once('animationcomplete', ()=> 
         {
-            this.explosionSound.stop();
+           // this.explosionSound.stop();
+           this.sound.play("enemyExplosion", {volume: 0.05});
             enemy.destroy(); 
         })
         if(building.health > 0)
@@ -308,10 +315,10 @@ class mainGame extends Phaser.Scene
 
            // building.anims.stop();
             console.log("BUILDING DESTROYED");
+           
             building.play(this.buildingName, true)
             building.once('animationcomplete', ()=> 
             {
-                //this.explosionSound.stop();
                 building.destroy(); 
                 this.buildingCount--;
             })
@@ -340,7 +347,7 @@ class mainGame extends Phaser.Scene
             this.lifeLost.play();
             console.log(this.percent);
           
-            player1.lives --;                     
+            player1.lives --;           
             this.setPlayers1Lives();
           
           
@@ -368,6 +375,7 @@ class mainGame extends Phaser.Scene
     destroyPlayer1()
     {
         console.log("Destroy enemy 1");
+        this.playerExplosion.play();
         this.destroyAnimationRunning = true;
         player1.play('dead2', true)
         player1.once('animationcomplete', ()=> 
@@ -446,6 +454,7 @@ class mainGame extends Phaser.Scene
         }
         else
         {
+            this.lifeLost.play();
             player2.lives --;
             this.setPlayers2Lives();
           
@@ -475,6 +484,7 @@ class mainGame extends Phaser.Scene
     destroyPlayer2()
     {
         console.log("Destroy enemy 2");
+        this.playerExplosion.play();
         this.destroyAnimationRunning2 = true;
         player2.play('dead2', true)
         player2.once('animationcomplete', ()=> 
@@ -535,6 +545,7 @@ class mainGame extends Phaser.Scene
 
         player.health -= 10;
         this.enemyCount--;
+        this.sound.play("enemyExplosion", {volume: 0.05});
         //enemy.play('destroyEnemy');
         enemy.destroy(true);      
         if(player == player1)
@@ -561,9 +572,10 @@ class mainGame extends Phaser.Scene
         /* DEBUGGING USE ONLY */
         if(this.inputKey.down.isDown)                                       
         {
-            // player1.score = 1000;
+            //this.lifeLost.play();     // player1.score = 1000;
              player2.score = 1000;     
-             player1.score = 1000;           
+             player1.score = 1000;    
+             this.sound.play('lifeLost');       
             //player2.health -= 10;
            // this.scene.start("gameWonKey", player1, player2);
         }
@@ -698,6 +710,7 @@ class mainGame extends Phaser.Scene
 
     enemyOutOfScreen(ground, enemy)
     {
+        this.sound.play("enemyExplosion", {volume: 0.05});
         enemy.play('destroyEnemy')
         enemy.destroy(true);        
         this.enemyCount--;

@@ -25,10 +25,10 @@ class loader extends Phaser.Scene
 
 
 
-
+        /* SPRITE SHEET FOR BACKGROUND */
         this.load.spritesheet('background', '../assets/environment/backgroundAnim.png', { frameWidth: 600, frameHeight: 800 });
 
-
+        /* SPRITE SHEETS FOR BUILDINGS */
         this.load.spritesheet('building1', '../assets/building/building1.png', { frameWidth: 43, frameHeight: 88 });
         this.load.spritesheet('building2', '../assets/building/building2.png', { frameWidth: 77, frameHeight: 88 });
         this.load.spritesheet('building3', '../assets/building/building3.png', { frameWidth: 43, frameHeight: 88 });
@@ -39,7 +39,7 @@ class loader extends Phaser.Scene
      
         /* AUDIO - MUSIC */
         this.load.audio("titleMusic", '../assets/Audio/music/music1.mp3');
-        // this.load.audio("mainGameMusic", '../assets/Audio/music/mainGameMusic.mp3');
+        this.load.audio("mainGameMusic", '../assets/Audio/music/mainGameMusic.mp3');
 
         /* SOUND EFFECTS */
         this.load.audio("thrust", '../assets/Audio/effects/thrustSoundEffect.mp3');
@@ -49,16 +49,15 @@ class loader extends Phaser.Scene
         this.load.audio("lifeLost", '../assets/Audio/effects/lifeLost.mp3');
         this.load.audio("gainLife", '../assets/Audio/effects/gainLife.mp3');
         this.load.audio("gainHealth", '../assets/Audio/effects/gainHealth.mp3');
+        this.load.audio("playerExplosion", '../assets/Audio/effects/shipExplosion.mp3');
 
- 
+
 
 
         /* BUTTONS */
         this.load.image('startButton', '../assets/UI/startButton.png');
         this.load.image('controlButton', '../assets/UI/controlButton.png');
-
         this.load.image('controls', '../assets/UI/controls.png');
-
         this.load.text('font', '../assets/fonts/AstroSpace.ttf');
 
 
